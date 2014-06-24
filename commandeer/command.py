@@ -1,10 +1,12 @@
 from envoy import run
 from commandeer.pipe import Pipe
+from commandeer.utils import make_options
+from commandeer.template import substitute_values
 
 class Command(object):
     def __init__(self, command, *positional, **options):
         self.command = command
-        self.positional = positional
+        self.positional = list(positional)
         self.options = options
         self.base_command = None
 
@@ -14,14 +16,7 @@ class Command(object):
 
     @options.setter
     def options(self, options):
-        results = {}
-        for key, value in options.items():
-            key = key.replace('_', '-')
-            option = '--{key}'.format(key=key)
-            if len(key) == 1:
-                option = '-{key}'.format(key=key)
-            results[option] = value
-        self._options = results
+        self._options = make_options(options)
 
     @property
     def options_string(self):
@@ -34,8 +29,9 @@ class Command(object):
             stack.append(string)
 
         for item in self.positional:
-            stack.append("'{item}'".format(item=item))
-
+            if not item.startswith('"'):
+                item = "'{item}'".format(item=item)
+            stack.append(item)
         return ' '.join(stack)
 
     def __str__(self):
@@ -54,8 +50,8 @@ class Command(object):
         return self.__dict__[attribute]
 
     def __call__(self, *args, **kwargs):
-        self.positional = args
-        self.options = kwargs
+        self.positional.extend(args)
+        self.options.update(make_options(kwargs))
         return self
 
     def subcommand(self, command):
@@ -63,6 +59,9 @@ class Command(object):
         subcommand.base_command = self
         return subcommand
 
-    def run(self, **kwargs):
-        response = run(str(self), **kwargs)
+    def run(self, values=None, **kwargs):
+        string = str(self)
+        if values:
+            string = substitute_values(string, values)
+        response = run(string, **kwargs)
         return response

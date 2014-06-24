@@ -23,5 +23,12 @@ class MainTest(unittest.TestCase):
         pipe += commandeer.Command('grep', 'some-pattern', context=1)
         assert str(pipe) == "ls -l | grep --context='1' 'some-pattern'"
 
+    def test_subsitute(self):
+        echo = commandeer.Command('echo', n=None)
+        response = echo('"$value"').run(values={'value':'Hello!'})
+
+        assert response.std_out == 'Hello!'
+        assert str(echo) == 'echo -n "$value"'
+
 if __name__ == "__main__":
     unittest.main()
