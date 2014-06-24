@@ -1,5 +1,5 @@
 from envoy import run
-from commandeer import substitute_values
+from commandeer.template import substitute_values
 
 class Pipe(object):
     def __init__(self, *commands):
