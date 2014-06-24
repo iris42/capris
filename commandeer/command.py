@@ -30,7 +30,7 @@ class Command(object):
         for key, value in self.options.items():
             string = '{key}'
             if value is not None:
-                string = '{key}="{value}"'
+                string = '{key}=\'{value}\''
             string = string.format(key=key, value=value)
             stack.append(string)
         return ' '.join(stack)
