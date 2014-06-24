@@ -43,6 +43,15 @@ for filename in response.std_out.strip().split('\n'):
     print(filename)
 ```
 
+Also, instead of manually building up the pipe object, you can
+also use a more convenient method of using the `or` operator
+on the command/pipe objects:
+
+```python
+pipe = git.log(date='relative') | grep('name')
+response = pipe.run()
+```
+
 ## Timeouts, and passing data to stdin
 
 You can pass the `timeout` and `data` keyword arguments (respectively)
