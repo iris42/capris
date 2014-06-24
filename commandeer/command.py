@@ -26,15 +26,15 @@ class Command(object):
     @property
     def options_string(self):
         stack = []
-        for item in self.positional:
-            stack.append("'{item}'".format(item=item))
-
         for key, value in self.options.items():
             string = '{key}'
             if value is not None:
                 string = '{key}=\'{value}\''
             string = string.format(key=key, value=value)
             stack.append(string)
+
+        for item in self.positional:
+            stack.append("'{item}'".format(item=item))
 
         return ' '.join(stack)
 

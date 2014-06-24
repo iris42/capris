@@ -42,3 +42,21 @@ response = pipe.run()
 for filename in response.std_out.strip().split('\n'):
     print(filename)
 ```
+
+## Timeouts, and passing data to stdin
+
+You can pass the `timeout` and `data` keyword arguments (respectively)
+to limit the execution time and pass in data to stdin. For
+example to pass some data to `grep`:
+
+```python
+grep = Command('grep')
+response = grep('pattern').run(data='pattern pattern')
+print(response.std_out.strip())
+# => 'pattern pattern'
+```
+
+All other keyword arguments that are supported by the `envoy.run`
+function will also be accepted here, because the `Command.run`
+function delegates these keyword arguments to the `envoy.run`
+function.

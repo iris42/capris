@@ -20,8 +20,8 @@ class MainTest(unittest.TestCase):
     def test_pipe(self):
         pipe = commandeer.Pipe()
         pipe += commandeer.Command('ls', l=None)
-        pipe += commandeer.Command('grep', 'some-pattern')
-        assert str(pipe) == "ls -l | grep 'some-pattern'"
+        pipe += commandeer.Command('grep', 'some-pattern', context=1)
+        assert str(pipe) == "ls -l | grep --context='1' 'some-pattern'"
 
 if __name__ == "__main__":
     unittest.main()
