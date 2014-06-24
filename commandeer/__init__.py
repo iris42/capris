@@ -12,7 +12,7 @@ class Runnable(object):
 
     def __or__(self, other):
         if isinstance(other, Pipe):
-            other += self
+            other.append(self)
             return other
         return Pipe(self, other)
 
@@ -25,4 +25,4 @@ from commandeer.pipe import Pipe
 from commandeer.iocontext import IOContext
 
 __all__ = ['Command','Pipe']
-VERSION='0.0.15'
+VERSION='0.0.16'
