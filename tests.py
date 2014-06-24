@@ -23,12 +23,19 @@ class MainTest(unittest.TestCase):
         pipe += commandeer.Command('grep', 'some-pattern', context=1)
         assert str(pipe) == "ls -l | grep --context='1' 'some-pattern'"
 
-    def test_subsitute(self):
+    def test_substitute(self):
         echo = commandeer.Command('echo', n=None)
         response = echo('"$value"').run(values={'value':'Hello!'})
 
         assert response.std_out == 'Hello!'
         assert str(echo) == 'echo -n "$value"'
+
+    def test_nested_substitute(self):
+        echo = commandeer.Command('echo', n=None)
+        response = echo('"${user.name}"').run(values={'user':{'name':'Eugene'}})
+
+        assert response.std_out == 'Eugene'
+        assert str(echo) == 'echo -n "${user.name}"'
 
 if __name__ == "__main__":
     unittest.main()
