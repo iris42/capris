@@ -6,6 +6,16 @@ class IOContext(Runnable):
         self.input_file = None
         self.output_file = None
 
+    def __repr__(self):
+        strings = [repr(self.runnable)]
+        if self.input_file is not None:
+            strings.insert(0, self.input_file.name)
+
+        if self.output_file is not None:
+            strings.append(self.output_file.name)
+
+        return '<IOContext %s>' % (' > '.join(strings))
+
     def __gt__(self, handle):
         self.output_file = handle
         return self

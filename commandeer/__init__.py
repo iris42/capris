@@ -10,6 +10,12 @@ class Runnable(object):
         response = run(string, **kwargs)
         return response
 
+    def __repr__(self):
+        return '<{name} [{string}]>'.format(
+                name=self.__class__.__name__,
+                string=str(self)
+                )
+
     def __or__(self, other):
         if isinstance(other, Pipe):
             other.append(self)
