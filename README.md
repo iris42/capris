@@ -121,3 +121,13 @@ for example:
 ```python
 (open('setup.py') >= grep('import *').iostream).run()
 ```
+
+You can also pipe `IOContext` objects (those obtained from
+the `iocontext` attribute of pipes or commands just like
+you would normally do to pipes or commands, for example:
+
+```python
+>>> pipe = python('commits.py') | grep('[a-e0-9]\{40\}').iostream
+>>> str(pipe)
+"python 'commits.py' | grep '[a-e0-9]\\{40\\}'"
+```

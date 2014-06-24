@@ -6,6 +6,9 @@ class IOContext(Runnable):
         self.input_file = None
         self.output_file = None
 
+    def __str__(self):
+        return str(self.runnable)
+
     def __repr__(self):
         strings = [repr(self.runnable)]
         if self.input_file is not None:
