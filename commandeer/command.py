@@ -1,15 +1,16 @@
 from collections import deque
-from envoy import run
-from commandeer.pipe import Pipe
+from commandeer import Runnable
 from commandeer.utils import make_options
-from commandeer.template import substitute_values
 
-class Command(object):
+class Command(Runnable):
     def __init__(self, command, *positional, **options):
         self.command = command
         self.positional = list(positional)
         self.options = options
+
         self.base_command = None
+        self.input_file = None
+        self.output_file = None
 
     @property
     def options(self):
@@ -63,15 +64,3 @@ class Command(object):
         subcommand.base_command = self
         return subcommand
 
-    def run(self, values=None, **kwargs):
-        string = str(self)
-        if values is not None:
-            string = substitute_values(string, values)
-        response = run(string, **kwargs)
-        return response
-
-    def __or__(self, other):
-        if isinstance(other, Pipe):
-            other += self
-            return other
-        return Pipe(self, other)

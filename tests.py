@@ -1,8 +1,29 @@
 import commandeer
 import unittest
 
-class MainTest(unittest.TestCase):
-    def test_piping(self):
+class InOutTest(unittest.TestCase):
+    def test_pipe(self):
+        pipe = commandeer.Pipe()
+        "filename.txt" > pipe > "output.txt"
+
+        assert pipe.output_file == 'output.txt'
+        assert pipe.input_file  == 'filename.txt'
+
+    def test_command(self):
+        grep = commandeer.Command('grep')
+        "setup.py" > grep('import') > "output.txt"
+
+        assert grep.output_file == 'output.txt'
+        assert grep.input_file  == 'setup.py'
+
+class PipeTest(unittest.TestCase):
+    def test_pipe(self):
+        pipe = commandeer.Pipe()
+        pipe += commandeer.Command('ls', l=None)
+        pipe += commandeer.Command('grep', 'some-pattern', context=1)
+        assert str(pipe) == "ls -l | grep --context='1' 'some-pattern'"
+
+    def test_or_magic(self):
         git = commandeer.Command('git')
         grep = commandeer.Command('grep')
 
@@ -14,6 +35,7 @@ class MainTest(unittest.TestCase):
         assert str(pipe) == 'git | grep | grep'
         assert isinstance(pipe, commandeer.Pipe)
 
+class CommandTest(unittest.TestCase):
     def test_subcommand(self):
         git = commandeer.Command('git')
         log = git.log(graph=None, date="relative")
@@ -29,12 +51,7 @@ class MainTest(unittest.TestCase):
         assert grep.options['--label'] is None
         assert grep.options['--context'] == 1
 
-    def test_pipe(self):
-        pipe = commandeer.Pipe()
-        pipe += commandeer.Command('ls', l=None)
-        pipe += commandeer.Command('grep', 'some-pattern', context=1)
-        assert str(pipe) == "ls -l | grep --context='1' 'some-pattern'"
-
+class SubstitutionTest(unittest.TestCase):
     def test_substitute(self):
         echo = commandeer.Command('echo', n=None)
         response = echo('"$value"').run(values={'value':'Hello!'})
