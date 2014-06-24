@@ -1,3 +1,4 @@
+from collections import deque
 from envoy import run
 from commandeer.pipe import Pipe
 from commandeer.utils import make_options
@@ -35,19 +36,22 @@ class Command(object):
         return ' '.join(stack)
 
     def __str__(self):
-        stack = [self.command]
-        options = self.options_string
-        if options:
-            stack.append(options)
+        stack = deque((self.command,))
+        if self.positional or self.options:
+            stack.append(self.options_string)
+
         if self.base_command is not None:
-            stack.insert(0, str(self.base_command))
+            stack.appendleft(str(self.base_command))
+
         return ' '.join(stack)
 
     def __getattr__(self, attribute):
-        if attribute not in self.__dict__:
+        values = self.__dict__
+        if attribute not in values:
             attribute = attribute.replace('_', '-')
             return self.subcommand(attribute)
-        return self.__dict__[attribute]
+
+        return values[attribute]
 
     def __call__(self, *args, **kwargs):
         self.positional.extend(args)
@@ -65,3 +69,9 @@ class Command(object):
             string = substitute_values(string, values)
         response = run(string, **kwargs)
         return response
+
+    def __or__(self, other):
+        if isinstance(other, Pipe):
+            other += self
+            return other
+        return Pipe(self, other)

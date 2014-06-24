@@ -2,6 +2,18 @@ import commandeer
 import unittest
 
 class MainTest(unittest.TestCase):
+    def test_piping(self):
+        git = commandeer.Command('git')
+        grep = commandeer.Command('grep')
+
+        pipe = git | grep
+        assert str(pipe) == 'git | grep'
+        assert isinstance(pipe, commandeer.Pipe)
+
+        pipe = commandeer.Pipe(git, grep) | grep
+        assert str(pipe) == 'git | grep | grep'
+        assert isinstance(pipe, commandeer.Pipe)
+
     def test_subcommand(self):
         git = commandeer.Command('git')
         log = git.log(graph=None, date="relative")

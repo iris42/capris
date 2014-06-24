@@ -22,6 +22,15 @@ class Pipe(object):
     __iadd__ = append
     __isub__ = remove
 
+    def __or__(self, other):
+        if isinstance(other, Pipe):
+            pipe = Pipe(*self.commands)
+            for item in other.commands:
+                pipe += item
+            return pipe
+        self.append(other)
+        return self
+
     def run(self, values=None, **kwargs):
         string = str(self)
         if values is not None:
