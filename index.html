@@ -1,0 +1,31 @@
+<html>
+<head>
+  <title>Comandeer</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/default.min.css">
+  <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+  <h1>Commandeer</h1>
+  <span id="github-url">[<a href="http://github.com/eugene-eeo/commandeer">eugene-eeo/commandeer</a>]</span>
+  <p>
+    <code>Commandeer</code> is a little Python DSL for doing beautiful
+    commands and building apps that leverage the command-line.
+  </p>
+  <pre><code>from commandeer import *
+git = Command('git')</code></pre>
+  <p>
+    Underneath the hood <code>commandeer</code> uses the <code>envoy</code>
+    library to run the commands and return the responses, while only
+    generating commands from method calls.
+  </p>
+  <pre><code>pipe = git.log(n=20) | grep('[a-f0-9]\{40\}', o=None)
+response = pipe.run()</code></pre>
+  <p>
+    If you are interested in contributing or using the library take
+    note that it's API is still in beta mode and breaking changes
+    can always be made.
+  </p>
+</body>
+</html>
