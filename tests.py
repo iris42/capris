@@ -1,6 +1,14 @@
 import commandeer
 import unittest
 
+class IOStreamTest(unittest.TestCase):
+    def test_iostream(self):
+        grep = commandeer.Command('grep')
+        stream = "input" > grep.iostream > "output"
+
+        assert stream.input_file  == 'input'
+        assert stream.output_file == 'output'
+
 class PipeTest(unittest.TestCase):
     def test_pipe(self):
         pipe = commandeer.Pipe()

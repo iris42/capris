@@ -83,3 +83,23 @@ echo('"$value"', n=None)
 response = echo.run(values={'value':'Hello!'})
 assert response.std_out == 'Hello!'
 ```
+
+## Redirection
+
+Redirection is very simple, if you want to do it with a bit of
+syntactic sugar. For example to `grep` a pattern from a file
+that has been read into memory we can do:
+
+```python
+import sys
+grep = Command('grep')
+
+iostream = open('setup.py') > grep('import *').iostream > sys.stdout
+response = iostream.run()
+```
+
+The reason that we need to do the `.iostream` is because we
+need to ensure some _correctness_- for example a command that
+has been redirected shouldn't affect the main command object
+but instead return a new command object, or at least a `run`-able
+object.

@@ -16,8 +16,13 @@ class Runnable(object):
             return other
         return Pipe(self, other)
 
+    @property
+    def iostream(self):
+        return IOContext(self)
+
 from commandeer.command import Command
 from commandeer.pipe import Pipe
+from commandeer.iocontext import IOContext
 
 __all__ = ['Command','Pipe']
 VERSION='0.0.13'

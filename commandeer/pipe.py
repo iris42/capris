@@ -3,8 +3,6 @@ from commandeer import Runnable
 class Pipe(Runnable):
     def __init__(self, *commands):
         self.commands = list(commands)
-        self.input_file = None
-        self.output_file = None
 
     def __str__(self):
         stack = []

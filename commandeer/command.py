@@ -7,10 +7,7 @@ class Command(Runnable):
         self.command = command
         self.positional = list(positional)
         self.options = options
-
         self.base_command = None
-        self.input_file = None
-        self.output_file = None
 
     @property
     def options(self):
