@@ -52,9 +52,13 @@ class Command(Runnable):
         return values[attribute]
 
     def __call__(self, *args, **kwargs):
-        self.positional.extend(args)
-        self.options.update(make_options(kwargs))
-        return self
+        copy = Command(self.command, *self.positional)
+        copy.base_command = self.base_command
+        copy.positional.extend(args)
+
+        copy.options.update(self.options.copy())
+        copy.options.update(make_options(kwargs))
+        return copy
 
     def subcommand(self, command):
         subcommand = Command(command)

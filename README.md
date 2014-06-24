@@ -26,6 +26,19 @@ does is become a DSL for generating commands:
 'git log --graph --date="relative"'
 ```
 
+Note that when you create call subcommand or call a command
+object with braces i.e. `git()`, you will get a _copy_ of
+the command object with updated options and positional arguments.
+For example:
+
+```python
+>>> git = Command('git')
+>>> git(bare=None) is git
+False
+>>> git.log() is git.log()
+False
+```
+
 ## Piping Commands
 
 You can pipe commands using the `Pipe` class, for example the

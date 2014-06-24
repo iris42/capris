@@ -38,7 +38,7 @@ class CommandTest(unittest.TestCase):
 
     def test_options(self):
         grep = commandeer.Command('grep')
-        grep(e='Hello World', label=None, context=1)
+        grep = grep(e='Hello World', label=None, context=1)
 
         assert grep.options['-e'] == "Hello World"
         assert grep.options['--label'] is None
@@ -47,14 +47,15 @@ class CommandTest(unittest.TestCase):
 class SubstitutionTest(unittest.TestCase):
     def test_substitute(self):
         echo = commandeer.Command('echo', n=None)
-        response = echo('"$value"').run(values={'value':'Hello!'})
+        echo = echo('"$value"')
+        response = echo.run(values={'value':'Hello!'})
 
         assert response.std_out == 'Hello!'
         assert str(echo) == 'echo -n "$value"'
 
     def test_nested_substitute(self):
-        echo = commandeer.Command('echo', n=None)
-        response = echo('"${user.name}"').run(values={'user':{'name':'Eugene'}})
+        echo = commandeer.Command('echo', '"${user.name}"', n=None)
+        response = echo.run(values={'user':{'name':'Eugene'}})
 
         assert response.std_out == 'Eugene'
         assert str(echo) == 'echo -n "${user.name}"'
