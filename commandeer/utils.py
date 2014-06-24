@@ -2,6 +2,24 @@ from re import compile
 
 regex = compile(r'\$(\{[a-zA-Z.]+\}|[a-zA-Z.]+)(?=[^\']*(?:\'[^\']*\'[^\']*)*$)')
 
+def escape(value):
+    return str(value).replace("'", "\\'").replace('"', '\\"')
+
+def option_string(positional, options):
+    stack = []
+    for key, value in options.items():
+        string = '{key}'
+        if value is not None:
+            string = '{key}=\'{value}\''
+        string = string.format(key=key, value=escape(value))
+        stack.append(string)
+
+    for item in positional:
+        if not item.startswith('"'):
+            item = "'{item}'".format(item=escape(item))
+        stack.append(item)
+    return ' '.join(stack)
+
 def substitute_values(string, values, default=''):
     def callback(m):
         key = m.group(1).strip('{').strip('}')

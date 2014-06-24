@@ -1,6 +1,6 @@
 from collections import deque
 from commandeer import Runnable
-from commandeer.utils import make_options
+from commandeer.utils import make_options, option_string
 
 class Command(Runnable):
     def __init__(self, command, *positional, **options):
@@ -19,19 +19,7 @@ class Command(Runnable):
 
     @property
     def options_string(self):
-        stack = []
-        for key, value in self.options.items():
-            string = '{key}'
-            if value is not None:
-                string = '{key}=\'{value}\''
-            string = string.format(key=key, value=value)
-            stack.append(string)
-
-        for item in self.positional:
-            if not item.startswith('"'):
-                item = "'{item}'".format(item=item)
-            stack.append(item)
-        return ' '.join(stack)
+        return option_string(self.positional, self.options)
 
     def __str__(self):
         stack = deque((self.command,))
