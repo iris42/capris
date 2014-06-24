@@ -60,3 +60,17 @@ All other keyword arguments that are supported by the `envoy.run`
 function will also be accepted here, because the `Command.run`
 function delegates these keyword arguments to the `envoy.run`
 function.
+
+## Shell-like substitution
+
+You can perform shell-like substitution on the command string
+before you run the command, provided that you explicitly
+double quote everything, for example:
+
+```python
+echo = Command('echo')
+echo('"$value"', n=None)
+
+response = echo.run(values={'value':'Hello!'})
+assert response.std_out == 'Hello!'
+```

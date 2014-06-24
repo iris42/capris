@@ -61,7 +61,7 @@ class Command(object):
 
     def run(self, values=None, **kwargs):
         string = str(self)
-        if values:
+        if values is not None:
             string = substitute_values(string, values)
         response = run(string, **kwargs)
         return response

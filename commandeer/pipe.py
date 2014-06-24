@@ -1,4 +1,5 @@
 from envoy import run
+from commandeer import substitute_values
 
 class Pipe(object):
     def __init__(self, *commands):
@@ -21,6 +22,10 @@ class Pipe(object):
     __iadd__ = append
     __isub__ = remove
 
-    def run(self, **kwargs):
-        response = run(str(self), **kwargs)
+    def run(self, values=None, **kwargs):
+        string = str(self)
+        if values is not None:
+            string = substitute_values(string, values)
+
+        response = run(string, **kwargs)
         return response
