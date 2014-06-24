@@ -1,5 +1,5 @@
 from envoy import run
-from commandeer.template import substitute_values
+from commandeer.utils import substitute_values
 
 class Runnable(object):
     def run(self, values=None, **kwargs):
@@ -31,4 +31,4 @@ from commandeer.pipe import Pipe
 from commandeer.iocontext import IOContext
 
 __all__ = ['Command','Pipe']
-VERSION='0.0.18'
+VERSION='0.0.20'
