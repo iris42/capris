@@ -1,13 +1,13 @@
 from envoy import run
-from contextlib import contextmanager
+from commandeer.pipe import Pipe
 
 class Command(object):
-    def __init__(self, command, base_command=None, *positional, **options):
+    def __init__(self, command, *positional, **options):
         self.command = command
         self.positional = positional
         self.options = options
         self.subcommands = []
-        self.base_command = base_command
+        self.base_command = None
 
     @property
     def options(self):
@@ -26,7 +26,10 @@ class Command(object):
 
     @property
     def options_string(self):
-        stack = list(self.positional)
+        stack = []
+        for item in self.positional:
+            stack.append("'{item}'".format(item=item))
+
         for key, value in self.options.items():
             string = '{key}'
             if value is not None:
@@ -45,7 +48,7 @@ class Command(object):
     def __getattr__(self, attribute):
         if attribute not in self.__dict__:
             attribute = attribute.replace('_', '-')
-            return self.build_command(attribute)
+            return self.subcommand(attribute)
         return self.__dict__[attribute]
 
     def __call__(self, *args, **kwargs):
@@ -53,8 +56,9 @@ class Command(object):
         self.options = kwargs
         return self
 
-    def build_command(self, command):
-        subcommand = Command(command, base_command=self)
+    def subcommand(self, command):
+        subcommand = Command(command)
+        subcommand.base_command = self
         self.subcommands.append(subcommand)
         return subcommand
 

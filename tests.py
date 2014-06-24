@@ -10,5 +10,11 @@ class MainTest(unittest.TestCase):
         assert grep.options['--label'] is None
         assert grep.options['--context'] == 1
 
+    def test_pipe(self):
+        pipe = commandeer.Pipe()
+        pipe += commandeer.Command('ls', l=None)
+        pipe += commandeer.Command('grep', 'some-pattern')
+        assert str(pipe) == "ls -l | grep 'some-pattern'"
+
 if __name__ == "__main__":
     unittest.main()

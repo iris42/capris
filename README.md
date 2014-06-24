@@ -25,3 +25,20 @@ does is become a DSL for generating commands:
 >>> str(git.log(graph=None, date="relative"))
 'git log --graph --date="relative"'
 ```
+
+## Piping Commands
+
+You can pipe commands using the `Pipe` class, for example the
+trivial case of listing the directory and then `grep`-ing for
+a particular pattern on the output:
+
+```python
+from commandeer import Command, Pipe
+pipe = Pipe()
+pipe += Command('ls')
+pipe += Command('grep', '.py')
+
+response = pipe.run()
+for file in response.std_out.strip().split('\n'):
+    print(file)
+```
