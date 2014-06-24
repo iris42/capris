@@ -6,7 +6,6 @@ class Command(object):
         self.command = command
         self.positional = positional
         self.options = options
-        self.subcommands = []
         self.base_command = None
 
     @property
@@ -59,7 +58,6 @@ class Command(object):
     def subcommand(self, command):
         subcommand = Command(command)
         subcommand.base_command = self
-        self.subcommands.append(subcommand)
         return subcommand
 
     def run(self):
