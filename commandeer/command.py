@@ -17,7 +17,7 @@ class Command(object):
     def options(self, options):
         results = {}
         for key, value in options.items():
-            key = key.replace('_','-')
+            key = key.replace('_', '-')
             option = '--{key}'.format(key=key)
             if len(key) == 1:
                 option = '-{key}'.format(key=key)
@@ -30,7 +30,7 @@ class Command(object):
         for key, value in self.options.items():
             string = '{key}'
             if value is not None:
-                string = '{key}={value}'
+                string = '{key}="{value}"'
             string = string.format(key=key, value=value)
             stack.append(string)
         return ' '.join(stack)
@@ -44,7 +44,7 @@ class Command(object):
 
     def __getattr__(self, attribute):
         if attribute not in self.__dict__:
-            attribute = attribute.replace('_','-')
+            attribute = attribute.replace('_', '-')
             return self.build_command(attribute)
         return self.__dict__[attribute]
 
