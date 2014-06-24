@@ -35,11 +35,14 @@ class Command(object):
                 string = '{key}=\'{value}\''
             string = string.format(key=key, value=value)
             stack.append(string)
+
         return ' '.join(stack)
 
     def __str__(self):
         stack = [self.command]
-        stack.append(self.options_string)
+        options = self.options_string
+        if options:
+            stack.append(options)
         if self.base_command is not None:
             stack.insert(0, str(self.base_command))
         return ' '.join(stack)
