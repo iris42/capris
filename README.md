@@ -39,6 +39,6 @@ pipe += Command('ls')
 pipe += Command('grep', '.py')
 
 response = pipe.run()
-for file in response.std_out.strip().split('\n'):
-    print(file)
+for filename in response.std_out.strip().split('\n'):
+    print(filename)
 ```
