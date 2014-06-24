@@ -21,6 +21,6 @@ class Pipe(object):
     __iadd__ = append
     __isub__ = remove
 
-    def run(self):
-        response = run(str(self))
+    def run(self, **kwargs):
+        response = run(str(self), **kwargs)
         return response

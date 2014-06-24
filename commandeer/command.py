@@ -63,6 +63,6 @@ class Command(object):
         subcommand.base_command = self
         return subcommand
 
-    def run(self):
-        response = run(str(self))
+    def run(self, **kwargs):
+        response = run(str(self), **kwargs)
         return response
