@@ -63,4 +63,3 @@ class Command(Runnable):
         subcommand = Command(command)
         subcommand.base_command = self
         return subcommand
-

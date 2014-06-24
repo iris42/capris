@@ -1,21 +1,6 @@
 import commandeer
 import unittest
 
-class InOutTest(unittest.TestCase):
-    def test_pipe(self):
-        pipe = commandeer.Pipe()
-        "filename.txt" > pipe > "output.txt"
-
-        assert pipe.output_file == 'output.txt'
-        assert pipe.input_file  == 'filename.txt'
-
-    def test_command(self):
-        grep = commandeer.Command('grep')
-        "setup.py" > grep('import') > "output.txt"
-
-        assert grep.output_file == 'output.txt'
-        assert grep.input_file  == 'setup.py'
-
 class PipeTest(unittest.TestCase):
     def test_pipe(self):
         pipe = commandeer.Pipe()
