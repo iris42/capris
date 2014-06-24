@@ -115,4 +115,9 @@ The reason that we need to do the `.iostream` is because we
 need to ensure some _correctness_- for example a command that
 has been redirected shouldn't affect the main command object
 but instead return a new command object, or at least a `run`-able
-object.
+object. It is also possible to use `>=` instead of `>`,
+for example:
+
+```python
+(open('setup.py') >= grep('import *').iostream).run()
+```
