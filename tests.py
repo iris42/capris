@@ -1,15 +1,34 @@
+from cStringIO import StringIO
 import commandeer
 import commandeer.transaction
 import unittest
 
 class TransactionTest(unittest.TestCase):
+    def test_iostream(self):
+        transaction = commandeer.transaction.Transaction()
+        with transaction:
+            grep = transaction.grep()
+            iostream = StringIO('haha') > grep('haha').iostream > StringIO()
+            iostream.run()
+
+        assert iostream.output_file.getvalue().strip() == 'haha'
+
+    def test_piping(self):
+        transaction = commandeer.transaction.Transaction()
+        with transaction:
+            git = transaction.git()
+            grep = transaction.grep()
+            pipe = git(graph=None) | grep('commit')
+            pipe.run()
+
+        assert list(map(lambda x: x[0], transaction.history)) == [pipe]
+
     def test_transaction(self):
         transaction = commandeer.transaction.Transaction()
         with transaction:
             git = transaction.git()
             git.run()
 
-        assert transaction.results[git]
         assert transaction.history == [(git, commandeer.Command.run, (), {})]
 
 class IOStreamTest(unittest.TestCase):

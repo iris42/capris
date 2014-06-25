@@ -115,15 +115,10 @@ The reason that we need to do the `.iostream` is because we
 need to ensure some _correctness_- for example a command that
 has been redirected shouldn't affect the main command object
 but instead return a new command object, or at least a `run`-able
-object. It is also possible to use `>=` instead of `>`,
-for example:
-
-```python
-(open('setup.py') >= grep('import *').iostream).run()
-```
+object.
 
 You can also pipe `IOContext` objects (those obtained from
-the `iocontext` attribute of pipes or commands just like
+the `iostream` attribute of pipes or commands just like
 you would normally do to pipes or commands, for example:
 
 ```python

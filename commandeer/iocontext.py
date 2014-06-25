@@ -1,3 +1,4 @@
+from envoy import run
 from commandeer import Runnable
 
 class IOContext(Runnable):
@@ -27,14 +28,12 @@ class IOContext(Runnable):
         self.input_file = handle
         return self
 
-    __gte__ = __gt__
-    __lte__ = __lt__
-
-    def run(self, **kwargs):
+    def run(self, *args, **kwargs):
         if 'data' not in kwargs and self.input_file is not None:
             kwargs['data'] = self.input_file.read()
 
-        response = self.runnable.run(**kwargs)
+        string = self.runnable.command_string(kwargs.pop('values') if 'values' in kwargs else None)
+        response = run(string, *args, **kwargs)
         if self.output_file is not None:
             data = response.std_out
             self.output_file.write(data)

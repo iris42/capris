@@ -1,8 +1,26 @@
+from envoy import run
 from commandeer import Runnable
 from commandeer.command import Command
+from commandeer.pipe import Pipe
 from commandeer.iocontext import IOContext
 
-class TransactionCommand(Command):
+class TransactionRunnable(Runnable):
+    def __or__(self, other):
+        if isinstance(other, Pipe):
+            other.append(self)
+            return other
+        pipe = TransactionPipe(self, other)
+        pipe.history = self.history
+        return pipe
+
+    @property
+    def iostream(self):
+        iostream = TransactionIOContext(self)
+        iostream.history = self.history
+        return iostream
+
+
+class TransactionCommand(TransactionRunnable, Command):
     def run(self, *args, **kwargs):
         self.history.append((self, Command.run, args, kwargs))
 
@@ -11,13 +29,16 @@ class TransactionCommand(Command):
         copy.history = self.history
         return copy
 
-    @property
-    def iostream(self):
-        return TransactionIOContext(self)
 
-class TransactionIOContext(IOContext):
+class TransactionPipe(TransactionRunnable, Pipe):
+    def run(self, *args, **kwargs):
+        self.history.append((self, Pipe.run, args, kwargs))
+
+
+class TransactionIOContext(TransactionRunnable, IOContext):
     def run(self, *args, **kwargs):
         self.history.append((self, IOContext.run, args, kwargs))
+
 
 class Transaction(object):
     def __init__(self):
@@ -33,13 +54,16 @@ class Transaction(object):
 
     def command(self, command):
         command = TransactionCommand(command.replace('_','-'))
-        command.history = self.history
+        command.history = self
         return command
+
+    def append(self, thing):
+        self.history.append(thing)
 
     def __enter__(self):
         self.history = []
-        self.results = {}
+        self.results = []
 
     def __exit__(self, *ignored):
         for command, runner, args, kwargs in self.history:
-            self.results[command] = runner(command, *args, **kwargs)
+            self.results.append(runner(command, *args, **kwargs))
