@@ -13,6 +13,9 @@ a daily basis:
 >>> git, grep = Command('git'), Command('grep')
 
 >>> pipe = git.log(n=10, pretty="oneline") | grep(r'[a-f0-9]\{40\}', o=None)
+>>> str(pipe)
+"git log -n 10 --pretty='oneline' | grep -o '[a-f0-9]\{40\}'"
+
 >>> response = pipe.run()
 >>> response.status_code
 0
