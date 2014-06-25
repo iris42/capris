@@ -2,14 +2,14 @@ from envoy import run
 from commandeer.utils import substitute_values
 
 class Runnable(object):
-    def command_string(self, values=None):
+    def command_string(self, values=None, **kwargs):
         string = str(self)
         if values is not None:
             string = substitute_values(string, values)
         return string
 
     def run(self, values=None, **kwargs):
-        response = run(self.command_string(values), **kwargs)
+        response = run(self.command_string(values=values), **kwargs)
         return response
 
     def __repr__(self):

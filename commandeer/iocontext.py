@@ -32,7 +32,9 @@ class IOContext(Runnable):
         if 'data' not in kwargs and self.input_file is not None:
             kwargs['data'] = self.input_file.read()
 
-        string = self.runnable.command_string(kwargs.pop('values') if 'values' in kwargs else None)
+        string = self.runnable.command_string(
+                kwargs.pop('values') if 'values' in kwargs else None
+                )
         response = run(string, *args, **kwargs)
         if self.output_file is not None:
             data = response.std_out

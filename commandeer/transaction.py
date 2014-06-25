@@ -19,25 +19,19 @@ class TransactionRunnable(Runnable):
         iostream.history = self.history
         return iostream
 
+    def run(self, *args, **kwargs):
+        self.history.append((self, self.__class__.__bases__[-1].run, args, kwargs))
+
 
 class TransactionCommand(TransactionRunnable, Command):
-    def run(self, *args, **kwargs):
-        self.history.append((self, Command.run, args, kwargs))
-
     def copy(self, base):
         copy = Command.copy(self, TransactionCommand)
         copy.history = self.history
         return copy
 
 
-class TransactionPipe(TransactionRunnable, Pipe):
-    def run(self, *args, **kwargs):
-        self.history.append((self, Pipe.run, args, kwargs))
-
-
-class TransactionIOContext(TransactionRunnable, IOContext):
-    def run(self, *args, **kwargs):
-        self.history.append((self, IOContext.run, args, kwargs))
+class TransactionPipe(TransactionRunnable, Pipe): pass
+class TransactionIOContext(TransactionRunnable, IOContext): pass
 
 
 class Transaction(object):
