@@ -53,7 +53,7 @@ before the arguments unix-style. For example:
 "-n --option='string'"
 ```
 
-### `Command.copy`
+### `Command.copy()`
 
 This function is called whenever the command object itself
 is called (via the `__call__` magic method), in order to
@@ -68,7 +68,7 @@ True
 False
 ```
 
-### `Command.subcommand`
+### `Command.subcommand(command)`
 
 This method is invoked whenever you perform a `getattr` on
 the command object and request for an attribute that is not
@@ -80,3 +80,6 @@ present. For example, the following are equivalent:
 >>> git.subcommand('log')
 <Command [git log]>
 ```
+
+Note that if you do a `getattr`-style command, the function
+will automatically replace underscores with dashes.

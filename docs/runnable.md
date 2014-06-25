@@ -9,7 +9,7 @@ and have a `run` method.
  - `Runnable.iostream`
  - `Runnable.__or__`
 
-### `Runnable.run`
+### `Runnable.run(*args, **kwargs)`
 
 Exceutes the runnable object regardless if it's a `Pipe`
 or `Command` or `IOContext` and returns a response depending
@@ -19,6 +19,9 @@ on whether it is a transaction-based command. For example:
 >>> git.log(graph=None).run()
 <Response [git]>
 ```
+
+Any keyword or positional arguments passed will be passed to
+the `envoy.run` function.
 
 ### `Runnable.iostream`
 
@@ -30,7 +33,7 @@ redirect output/input to the given runnable. For example:
 >>> iostream.run()
 ```
 
-### `Runnable.__or__`
+### `Runnable.__or__(other)`
 
 You can pipe `Runnable` objects by using the `|` operator,
 instead of building up the pipe object manually. For
