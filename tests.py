@@ -68,5 +68,9 @@ class CommandTest(unittest.TestCase):
         assert set(str(log).split()) == {"git", "log", "--graph", "--date='relative'"}
         assert str(git) == 'git'
 
+    def test_absolute(self):
+        ls = commandeer.Command('ls')
+        assert str(ls.absolute) == '/bin/ls'
+
 if __name__ == "__main__":
     unittest.main()

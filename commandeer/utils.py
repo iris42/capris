@@ -1,7 +1,16 @@
 from re import compile
+import os
 
 regex = compile(r'\$(\{[a-zA-Z.]+\}|[a-zA-Z.]+)')
 optionify = lambda string: string.replace('_', '-')
+
+def which(executable):
+    path = os.getenv('PATH')
+    for directory in path.split(os.path.pathsep):
+        fpath = os.path.join(directory, executable)
+        if os.path.exists(fpath) and os.access(fpath, os.X_OK):
+            return fpath
+    return executable
 
 def escape(string):
     return str(string).replace("'", "\\'")\

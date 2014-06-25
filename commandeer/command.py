@@ -1,6 +1,6 @@
 from collections import deque
 from commandeer.core import Runnable
-from commandeer.utils import option_string
+from commandeer.utils import option_string, which
 
 class Command(Runnable):
     def __init__(self, command, *positional, **options):
@@ -8,6 +8,12 @@ class Command(Runnable):
         self.positional = list(positional)
         self.options = options
         self.base_command = None
+
+    @property
+    def absolute(self):
+        copy = self.copy(self.__class__)
+        copy.command = which(self.command)
+        return copy
 
     @property
     def options_string(self):
