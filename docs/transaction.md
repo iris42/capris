@@ -17,7 +17,8 @@ with transaction:
     pipe = git.log(graph=None) | grep('commit *', o=None)
     pipe.run()
 
-assert transaction.results[0].status_code == 0
+    transaction.execute()
+    assert transaction.results[0].status_code == 0
 ```
 
 The commands in a transaction will be ran in sequence when the
@@ -49,11 +50,10 @@ conditions are met.
 
 ### `Transaction.execute()`
 
-Executes the transaction. This is when the `with` block exits.
-Alternatively you may call this method yourself with no arguments
-when you build up the transaction object yourself. The `execute`
-method will only run sequential commands as long as the previous
-command succeeds, aka:
+Executes the transaction. The `execute` method will only run
+sequential commands as long as the previous command succeeds,
+and you must call it to execute your commands within the `with`
+block.
 
 ```python
 for item in self.history:
@@ -66,7 +66,8 @@ for item in self.history:
 ### `Transaction.results`
 
 An attribute that contains the responses from each of the commands
-of the last transaction. It is automatically cleared at block entry.
+of the last transaction. It is automatically cleared at block entry
+and exit.
 
 ### `Transaction.history`
 
@@ -79,3 +80,5 @@ all the commands you should do:
 for command, _,_,_ in transaction.history:
     # do something
 ```
+
+It will be cleared on block exit and entry.
