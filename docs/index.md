@@ -25,22 +25,9 @@ A `Command` object represents a single command which can be
 chained to create readable subcommands. It only has a few
 methods and inherits from the base `Runnable` class:
 
- - `Command.options`
  - `Command.options_string`
  - `Command.copy`
  - `Command.subcommand`
-
-### `Command.options`
-
-A property with a souped-up getter and setter that will
-transform values into an options dictionary by transforming
-the keys. For example:
-
-```python
->>> command.options = {'n':None, 'option':'string'}
->>> command.options
-{'-n': None, '--option': 'string'}
-```
 
 ### `Command.options_string`
 
