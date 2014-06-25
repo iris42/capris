@@ -1,13 +1,19 @@
 from re import compile
 
-regex = compile(r'\$(\{[a-zA-Z.]+\}|[a-zA-Z.]+)(?=[^\']*(?:\'[^\']*\'[^\']*)*$)')
+regex = compile(r'\$(\{[a-zA-Z.]+\}|[a-zA-Z.]+)')
 
-def escape(value):
-    return str(value).replace("'", "\\'").replace('"', '\\"')
+def escape(string):
+    return str(string).replace("'", "\\'")
 
 def option_string(positional, options):
     stack = []
     for key, value in options.items():
+        key = key.replace('_', '-')
+        key = '-{key}'.format(key=key)
+
+        if len(key) > 2:
+            key = '-{key}'.format(key=key)
+
         string = '{key}'
         if value is not None:
             string = '{key}=\'{value}\''
@@ -15,16 +21,8 @@ def option_string(positional, options):
         stack.append(string)
 
     for item in positional:
-        if not item.startswith('"'):
-            item = "'{item}'".format(item=escape(item))
-        stack.append(item)
+        stack.append("'{item}'".format(item=escape(item)))
     return ' '.join(stack)
-
-def substitute_values(string, values, default=''):
-    def callback(m):
-        key = m.group(1).strip('{').strip('}')
-        return fetch_value(values, key, default)
-    return regex.sub(callback, string)
 
 def fetch_value(values, key, default):
     keys = key.split('.')
@@ -33,13 +31,3 @@ def fetch_value(values, key, default):
             return default
         values = values[item]
     return values
-
-def make_options(options):
-    results = {}
-    for key, value in options.items():
-        key = key.replace('_', '-')
-        option = '--{key}'.format(key=key)
-        if len(key) == 1:
-            option = '-{key}'.format(key=key)
-        results[option] = value
-    return results
