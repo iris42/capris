@@ -76,7 +76,6 @@ class CommandTest(unittest.TestCase):
         echo = commandeer.Command('echo')
         assert str(echo('"Hello"')) == 'echo \'\\"Hello\\"\''
 
-    def test_booleans(self):
         wget = commandeer.Command('wget')
         assert str(wget(ssl=False)) == 'wget --ssl=false'
 
