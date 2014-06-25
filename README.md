@@ -31,6 +31,7 @@ with strings and escaping for you.
 
  - Internal DSL for command generation
  - Support for nested subcommands
+ - Uses `envoy` under the hood
  - Smart option generation
  - Transactions and redirection
  - Built in support for pipes
