@@ -1,4 +1,4 @@
-from commandeer import Runnable
+from commandeer.core import Runnable
 
 class Pipe(Runnable):
     def __init__(self, *commands):

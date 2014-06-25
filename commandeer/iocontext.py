@@ -1,5 +1,5 @@
 from envoy import run
-from commandeer import Runnable
+from commandeer.core import Runnable
 
 class IOContext(Runnable):
     def __init__(self, runnable):
@@ -9,16 +9,6 @@ class IOContext(Runnable):
 
     def __str__(self):
         return str(self.runnable)
-
-    def __repr__(self):
-        strings = [repr(self.runnable)]
-        if self.input_file is not None:
-            strings.insert(0, self.input_file.name)
-
-        if self.output_file is not None:
-            strings.append(self.output_file.name)
-
-        return '<IOContext %s>' % (' > '.join(strings))
 
     def __gt__(self, handle):
         self.output_file = handle

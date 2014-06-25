@@ -1,5 +1,5 @@
 from collections import deque
-from commandeer import Runnable
+from commandeer.core import Runnable
 from commandeer.utils import option_string
 
 class Command(Runnable):

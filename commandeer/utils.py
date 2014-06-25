@@ -1,23 +1,21 @@
 from re import compile
 
 regex = compile(r'\$(\{[a-zA-Z.]+\}|[a-zA-Z.]+)')
+optionify = lambda string: string.replace('_', '-')
 
 def escape(string):
-    return str(string).replace("'", "\\'")
+    return str(string).replace("'", "\\'")\
+                      .replace('"', '\\"')
 
 def option_string(positional, options):
     stack = []
     for key, value in options.items():
-        key = key.replace('_', '-')
-        key = '-{key}'.format(key=key)
-
-        if len(key) > 2:
-            key = '-{key}'.format(key=key)
-
-        string = '{key}'
-        if value is not None:
-            string = '{key}=\'{value}\''
-        string = string.format(key=key, value=escape(value))
+        key = ("--{key}" if len(key) > 1 else "-{key}").format(key=optionify(key))
+        string = ('{key}=\'{value}\'' if value is not None else '{key}')
+        string = string.format(
+                key=key,
+                value=escape(value)
+                )
         stack.append(string)
 
     for item in positional:
