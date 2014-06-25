@@ -37,8 +37,9 @@ class Transaction(object):
             self.lock = True
 
     def execute(self):
-        if self.lock: return []
         with self.threadlock:
+            if self.lock:
+                return []
             for command, runner, args, kwargs in self.history:
                 response = runner(command, *args, **kwargs)
                 self.results.append(response)
