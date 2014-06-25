@@ -1,39 +1,5 @@
-body {
-    font-family: "Tahoma", Arial, sans-serif;
-    font-size: 18px;
-    width: 500px;
-    margin: 50px auto;
-}
-
-h1 {
-    margin-bottom: 0px;
-    text-align: center;
-}
-
-span#github-url {
-    display: block;
-    margin-top: 0px;
-    font-weight: bold;
-    text-align: center;
-}
-
-span#github-url a {
-    color: #777;
-    text-decoration: none;
-}
-
-code, span#github-url {
-    font-family: "Inconsolata", "Consolas", monospace;
-}
-
-pre {
-    margin: auto -20px;
-    padding: 0px 20px;
-    background-color: #f0f0f0;
-    overflow-x: scroll;
-}
-
-pre code {
-    background-color: #EEE;
-    border: 0;
-}
+body     { font-family: "Tahoma", Arial, sans-serif; font-size: 16px;
+           width: 625px; margin: 50px auto; }
+h1       { margin-bottom: 0px; text-align: center; }
+img#spinner { padding-right: 10px; }
+code     { font-family: "Consolas", "Monaco", monospace; font-size: 15px; }
