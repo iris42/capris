@@ -1,5 +1,12 @@
 body     { font-family: "Tahoma", Arial, sans-serif; font-size: 16px;
-           width: 625px; margin: 50px auto; }
+           width: 500px; margin: 50px auto; }
 h1       { margin-bottom: 0px; text-align: center; }
 img#spinner { padding-right: 10px; }
 code     { font-family: "Consolas", "Monaco", monospace; font-size: 15px; }
+pre      { background-color: #f8f8f8; overflow-x: scroll; margin: auto -20px; padding: 0px 20px; }
+code.hjls    { background-color: #f8f8f8; }
+
+span.hljs-prompt  { color: #777; }
+span.hljs-keyword { color: #000; font-weight: bold; }
+span.hljs-number  { color: #009999; }
+span.hjls-string  { color: #dd1144; }
