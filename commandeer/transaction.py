@@ -20,7 +20,14 @@ class TransactionRunnable(Runnable):
         return iostream
 
     def run(self, *args, **kwargs):
-        self.history.append((self, self.__class__.__bases__[-1].run, args, kwargs))
+        # assume all classes inherit from their derived
+        # ones second
+        self.history.append((
+            self,
+            self.__class__.__bases__[1].run,
+            args,
+            kwargs
+            ))
 
 
 class TransactionCommand(TransactionRunnable, Command):
