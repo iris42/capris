@@ -1,5 +1,16 @@
 import commandeer
+import commandeer.transaction
 import unittest
+
+class TransactionTest(unittest.TestCase):
+    def test_transaction(self):
+        transaction = commandeer.transaction.Transaction()
+        with transaction:
+            git = transaction.git()
+            git.run()
+
+        assert transaction.results[git]
+        assert transaction.history == [(git, commandeer.Command.run, (), {})]
 
 class IOStreamTest(unittest.TestCase):
     def test_iostream(self):
