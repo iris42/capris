@@ -72,5 +72,8 @@ class CommandTest(unittest.TestCase):
         ls = commandeer.Command('ls')
         assert str(ls.absolute) == '/bin/ls'
 
+    def test_escaping(self):
+        echo = commandeer.Command('echo')
+        assert str(echo('"Hello"')) == 'echo \'\\"Hello\\"\''
 if __name__ == "__main__":
     unittest.main()
