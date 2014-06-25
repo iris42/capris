@@ -1,6 +1,6 @@
 from collections import deque
 from commandeer import Runnable
-from commandeer.utils import make_options, option_string
+from commandeer.utils import option_string
 
 class Command(Runnable):
     def __init__(self, command, *positional, **options):
@@ -8,14 +8,6 @@ class Command(Runnable):
         self.positional = list(positional)
         self.options = options
         self.base_command = None
-
-    @property
-    def options(self):
-        return self._options
-
-    @options.setter
-    def options(self, options):
-        self._options = make_options(options)
 
     @property
     def options_string(self):
@@ -40,15 +32,14 @@ class Command(Runnable):
         return values[attribute]
 
     def copy(self, base):
-        copy = base(self.command, *self.positional)
+        copy = base(self.command, *self.positional, **self.options)
         copy.base_command = self.base_command
-        copy.options.update(self.options.copy())
         return copy
 
     def __call__(self, *args, **kwargs):
         copy = self.copy(self.__class__)
         copy.positional.extend(args)
-        copy.options.update(make_options(kwargs))
+        copy.options.update(kwargs)
         return copy
 
     def subcommand(self, command):

@@ -8,6 +8,12 @@ def escape(string):
 def option_string(positional, options):
     stack = []
     for key, value in options.items():
+        key = key.replace('_', '-')
+        key = '-{key}'.format(key=key)
+
+        if len(key) > 2:
+            key = '-{key}'.format(key=key)
+
         string = '{key}'
         if value is not None:
             string = '{key}=\'{value}\''
@@ -25,13 +31,3 @@ def fetch_value(values, key, default):
             return default
         values = values[item]
     return values
-
-def make_options(options):
-    results = {}
-    for key, value in options.items():
-        key = key.replace('_', '-')
-        option = '--{key}'.format(key=key)
-        if len(key) == 1:
-            option = '-{key}'.format(key=key)
-        results[option] = value
-    return results
