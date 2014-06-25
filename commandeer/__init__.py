@@ -26,4 +26,4 @@ from commandeer.pipe import Pipe
 from commandeer.iocontext import IOContext
 
 __all__ = ['Command','Pipe']
-VERSION='0.0.26'
+VERSION='0.0.27'
