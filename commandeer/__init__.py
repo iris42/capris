@@ -2,12 +2,14 @@ from envoy import run
 from commandeer.utils import substitute_values
 
 class Runnable(object):
-    def run(self, values=None, **kwargs):
+    def command_string(self, values=None, **kwargs):
         string = str(self)
         if values is not None:
             string = substitute_values(string, values)
+        return string
 
-        response = run(string, **kwargs)
+    def run(self, values=None, **kwargs):
+        response = run(self.command_string(values=values), **kwargs)
         return response
 
     def __repr__(self):
@@ -31,4 +33,4 @@ from commandeer.pipe import Pipe
 from commandeer.iocontext import IOContext
 
 __all__ = ['Command','Pipe']
-VERSION='0.0.21'
+VERSION='0.0.24'
