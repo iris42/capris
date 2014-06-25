@@ -13,28 +13,34 @@ def which(executable):
     return executable
 
 def escape(string):
-    return str(string).replace("'", "\\'")\
-                      .replace('"', '\\"')
+    if string in (True, False):
+        return str(string).lower()
+
+    if isinstance(string, int):
+        return str(string)
+    string = str(string).replace("'", "\\'")\
+                        .replace('"', '\\"')
+    return "'%s'" % (string)
 
 def option_string(positional, options):
     stack = []
     for key, value in options.items():
-        key = ("--{key}" if len(key) > 1 else "-{key}").format(key=optionify(key))
+        key = ("--{key}" if len(key) > 1 else "-{key} ").format(key=optionify(key))
 
-        string = '{key}=\'{value}\''
-        if value is None:
+        string = "{key}={value}"
+        if len(key) == 2:
+            string = '{key} {value}'
+        elif value is None:
             string = '{key}'
-        elif len(key) == 2:
-            string = '{key} \'{value}\''
 
         string = string.format(
                 key=key,
                 value=escape(value)
-                )
+                ).strip()
         stack.append(string)
 
     for item in positional:
-        stack.append("'{item}'".format(item=escape(item)))
+        stack.append(escape(item))
     return ' '.join(stack)
 
 def fetch_value(values, key, default):

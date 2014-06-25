@@ -46,7 +46,7 @@ class PipeTest(unittest.TestCase):
         pipe += commandeer.Command('ls', l=None)
         pipe += commandeer.Command('grep', 'some-pattern', context=1)
 
-        assert str(pipe) == "ls -l | grep --context='1' 'some-pattern'"
+        assert str(pipe) == "ls -l | grep --context=1 'some-pattern'"
 
     def test_or_magic(self):
         git = commandeer.Command('git')
@@ -75,5 +75,10 @@ class CommandTest(unittest.TestCase):
     def test_escaping(self):
         echo = commandeer.Command('echo')
         assert str(echo('"Hello"')) == 'echo \'\\"Hello\\"\''
+
+    def test_booleans(self):
+        wget = commandeer.Command('wget')
+        assert str(wget(ssl=False)) == 'wget --ssl=false'
+
 if __name__ == "__main__":
     unittest.main()
