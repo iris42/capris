@@ -1,7 +1,10 @@
+from threading import Lock
+
 class Transaction(object):
     def __init__(self):
         self.history = []
         self.results = []
+        self.threadlock = Lock()
         self.lock = False
 
     def __getattr__(self, command):
@@ -20,26 +23,30 @@ class Transaction(object):
         if not self.lock:
             self.history.append(thing)
 
+    def reset(self):
+        with self.threadlock:
+            del self.history[:]
+            del self.results[:]
+            self.lock = False
+
     def __enter__(self):
-        self.history = []
-        self.results = []
-        self.lock = False
+        self.reset()
 
     def abort(self):
-        self.history = []
-        self.lock = True
+        with self.threadlock:
+            self.lock = True
 
     def execute(self):
-        for command, runner, args, kwargs in self.history:
-            response = runner(command, *args, **kwargs)
-            self.results.append(response)
-            if response.status_code != 0:
-                break
+        if self.lock: return []
+        with self.threadlock:
+            for command, runner, args, kwargs in self.history:
+                response = runner(command, *args, **kwargs)
+                self.results.append(response)
+                if response.status_code != 0:
+                    break
         return self.results
 
     def __exit__(self, *ignored):
-        responses = self.execute()
-        self.lock = False
-        return responses
+        self.reset()
 
 from commandeer.transaction.wrappers import TransactionCommand

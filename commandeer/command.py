@@ -43,6 +43,6 @@ class Command(Runnable):
         return copy
 
     def subcommand(self, command):
-        subcommand = Command(command)
+        subcommand = self.__class__(command)
         subcommand.base_command = self
         return subcommand

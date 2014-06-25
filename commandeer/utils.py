@@ -11,7 +11,13 @@ def option_string(positional, options):
     stack = []
     for key, value in options.items():
         key = ("--{key}" if len(key) > 1 else "-{key}").format(key=optionify(key))
-        string = ('{key}=\'{value}\'' if value is not None else '{key}')
+
+        string = '{key}=\'{value}\''
+        if value is None:
+            string = '{key}'
+        elif len(key) == 2:
+            string = '{key} \'{value}\''
+
         string = string.format(
                 key=key,
                 value=escape(value)

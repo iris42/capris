@@ -21,10 +21,10 @@ class TransactionRunnable(Runnable):
 
     def run(self, *args, **kwargs):
         # assume all classes inherit from their derived
-        # ones second
+        # ones first
         self.history.append((
             self,
-            self.__class__.__bases__[1].run,
+            self.__class__.__bases__[0].run,
             args,
             kwargs
             ))
@@ -36,5 +36,10 @@ class TransactionIOContext(TransactionRunnable, IOContext): pass
 class TransactionCommand(TransactionRunnable, Command):
     def copy(self, base):
         copy = Command.copy(self, TransactionCommand)
+        copy.history = self.history
+        return copy
+
+    def subcommand(self, command):
+        copy = Command.subcommand(self, command)
         copy.history = self.history
         return copy
