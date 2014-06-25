@@ -11,7 +11,9 @@ class TransactionTest(unittest.TestCase):
             iostream = StringIO('haha') > grep('haha').iostream > StringIO()
             iostream.run()
 
+            transaction.execute()
             assert transaction.history
+            assert iostream.output_file.getvalue() == 'haha\n'
 
     def test_piping(self):
         transaction = commandeer.transaction.Transaction()

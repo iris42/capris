@@ -24,7 +24,7 @@ class TransactionRunnable(Runnable):
         # ones first
         self.history.append((
             self,
-            self.__class__.__bases__[0].run,
+            self.__class__.__bases__[1].run,
             args,
             kwargs
             ))
