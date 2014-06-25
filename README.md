@@ -1,114 +1,49 @@
-commandeer
+Commandeer
 ==========
 
-Commandeer is a library for helping you write apps that use
-the command line easily and build up the commands easily as
-well, for example to build an easy git wrapper:
+Commandeer is a MIT-licensed Python library built for writing
+composable apps that leverage the command line.
+
+A simple example of writing your own git wrapper, complete
+with other command-line utilities that you love and use on
+a daily basis:
 
 ```python
-from commandeer import Command
+>>> from commandeer import Command
+>>> git, grep = Command('git'), Command('grep')
 
-git = Command('git')
-git.init.run()
-
-commit = git.commit(m="Commit message")
-commit.run()
+>>> pipe = git.log(n=10, pretty="oneline") | grep(r'[a-f0-9]\{40\}', o=None)
+>>> response = pipe.run()
+>>> response.status_code
+0
+>>> print response.std_out
+...
 ```
 
-Underneath the hood, `commandeer` uses the `envoy` library
-to execute the commands and return responses. The `commandeer`
-library is nothing more than a command-generator, and all it
-does is become a DSL for generating commands:
+`commandeer` allows you to write code that just calls commands
+and helps you focus on writing the _commands that you need_,
+not the code required to handle calling and getting responses
+from the commands. `commandeer` does all of the mucking around
+with strings and escaping for you.
 
-```python
->>> git = Command('git')
->>> str(git.log(graph=None, date="relative"))
-'git log --graph --date="relative"'
-```
 
-Note that when you create call subcommand or call a command
-object with braces i.e. `git()`, you will get a _copy_ of
-the command object with updated options and positional arguments.
-For example:
+## Features
 
-```python
->>> git = Command('git')
->>> git(bare=None) is git
-False
->>> git.log() is git.log()
-False
-```
+ - Internal DSL for command generation
+ - Support for nested subcommands
+ - Smart option generation
+ - Transactions and redirection
+ - Built in support for pipes
+ - Thread safety
 
-## Piping Commands
 
-You can pipe commands using the `Pipe` class, for example the
-trivial case of listing the directory and then `grep`-ing for
-a particular pattern on the output:
+## Installation
 
-```python
-from commandeer import Command, Pipe
-pipe = Pipe()
-pipe += Command('ls')
-pipe += Command('grep', '.py')
+To install the library you can simply do a `git clone` and then
+either `pip install` locally or do a `setup.py`. For example:
 
-response = pipe.run()
-for filename in response.std_out.strip().split('\n'):
-    print(filename)
-```
-
-Also, instead of manually building up the pipe object, you can
-also use a more convenient method of using the `or` operator
-on the command/pipe objects:
-
-```python
-pipe = git.log(date='relative') | grep('name')
-response = pipe.run()
-```
-
-## Timeouts, and passing data to stdin
-
-You can pass the `timeout` and `data` keyword arguments (respectively)
-to limit the execution time and pass in data to stdin. For
-example to pass some data to `grep`:
-
-```python
-grep = Command('grep')
-response = grep('pattern').run(data='pattern pattern')
-print(response.std_out.strip())
-# => 'pattern pattern'
-```
-
-All other keyword arguments that are supported by the `envoy.run`
-function will also be accepted here, because the `Command.run`
-function delegates these keyword arguments to the `envoy.run`
-function.
-
-## Redirection
-
-Redirection is very simple, if you want to do it with a bit of
-syntactic sugar. For example to `grep` a pattern from a file
-that has been read into memory we can do:
-
-```python
-import sys
-grep = Command('grep')
-
-iostream = open('setup.py') > grep('import *').iostream > sys.stdout
-response = iostream.run()
-```
-
-The reason that we need to do the `.iostream` is because we
-need to ensure some _correctness_- for example a command that
-has been redirected shouldn't affect the main command object
-but instead return a new command object, or at least a `run`-able
-object.
-
-You can also pipe `IOContext` objects (those obtained from
-the `iostream` attribute of pipes or commands just like
-you would normally do to pipes or commands, for example:
-
-```python
->>> pipe = python('commits.py') | grep('[a-e0-9]\{40\}').iostream
->>> str(pipe)
-"python 'commits.py' | grep '[a-e0-9]\\{40\\}'"
+```bash
+$ git clone ssh://git@github.com/eugene-eeo/commandeer.git
+$ cd commandeer
+$ pip install .
 ```
