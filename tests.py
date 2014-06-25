@@ -44,6 +44,7 @@ class PipeTest(unittest.TestCase):
         pipe = commandeer.Pipe()
         pipe += commandeer.Command('ls', l=None)
         pipe += commandeer.Command('grep', 'some-pattern', context=1)
+
         assert str(pipe) == "ls -l | grep --context='1' 'some-pattern'"
 
     def test_or_magic(self):
@@ -73,22 +74,6 @@ class CommandTest(unittest.TestCase):
         assert grep.options['-e'] == "Hello World"
         assert grep.options['--label'] is None
         assert grep.options['--context'] == 1
-
-class SubstitutionTest(unittest.TestCase):
-    def test_substitute(self):
-        echo = commandeer.Command('echo', n=None)
-        echo = echo('"$value"')
-        response = echo.run(values={'value':'Hello!'})
-
-        assert response.std_out == 'Hello!'
-        assert str(echo) == 'echo -n "$value"'
-
-    def test_nested_substitute(self):
-        echo = commandeer.Command('echo', '"${user.name}"', n=None)
-        response = echo.run(values={'user':{'name':'Eugene'}})
-
-        assert response.std_out == 'Eugene'
-        assert str(echo) == 'echo -n "${user.name}"'
 
 if __name__ == "__main__":
     unittest.main()

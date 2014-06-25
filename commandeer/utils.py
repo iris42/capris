@@ -1,9 +1,9 @@
 from re import compile
 
-regex = compile(r'\$(\{[a-zA-Z.]+\}|[a-zA-Z.]+)(?=[^\']*(?:\'[^\']*\'[^\']*)*$)')
+regex = compile(r'\$(\{[a-zA-Z.]+\}|[a-zA-Z.]+)')
 
-def escape(value):
-    return str(value).replace("'", "\\'").replace('"', '\\"')
+def escape(string):
+    return str(string).replace("'", "\\'")
 
 def option_string(positional, options):
     stack = []
@@ -15,16 +15,8 @@ def option_string(positional, options):
         stack.append(string)
 
     for item in positional:
-        if not item.startswith('"'):
-            item = "'{item}'".format(item=escape(item))
-        stack.append(item)
+        stack.append("'{item}'".format(item=escape(item)))
     return ' '.join(stack)
-
-def substitute_values(string, values, default=''):
-    def callback(m):
-        key = m.group(1).strip('{').strip('}')
-        return fetch_value(values, key, default)
-    return regex.sub(callback, string)
 
 def fetch_value(values, key, default):
     keys = key.split('.')
