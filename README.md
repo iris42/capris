@@ -32,7 +32,7 @@ with strings and escaping for you.
 
 ## Features
 
- - Internal DSL for command generation
+ - DSL for command generation
  - Support for nested subcommands
  - Uses `envoy` under the hood
  - Smart option generation
