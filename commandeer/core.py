@@ -41,18 +41,12 @@ def parse(command):
     for item in stack:
         yield shlex.split(item)
 
-def run_command(command, env=None, data=None, timeout=None, cwd=None, gevent=None):
-    environment = dict(os.environ)
-    environment.update(env or {})
-
-    response = Response()
-    response.env = environment
-
-    def callback():
+def popen_callback(command, response, env, data, timeout, cwd):
+    def closure():
         try:
             process = subprocess.Popen(
                     args=command,
-                    env=environment,
+                    env=env,
                     universal_newlines=True,
                     shell=False,
                     stdout=subprocess.PIPE,
@@ -66,8 +60,16 @@ def run_command(command, env=None, data=None, timeout=None, cwd=None, gevent=Non
             response.status_code = process.returncode
         except Exception as err:
             response.exception = err
+    return closure
 
-    thread = threading.Thread(target=callback)
+def run_command(command, env={}, data=None, timeout=None, cwd=None):
+    environment = dict(os.environ)
+    environment.update(env)
+
+    response = Response()
+    response.env = environment
+
+    thread = threading.Thread(target=popen_callback(command, response, environment, data, timeout, cwd))
     thread.start()
 
     thread.join(timeout)
