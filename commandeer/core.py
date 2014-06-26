@@ -6,14 +6,25 @@ import shlex
 
 class Response(object):
     def __init__(self, process=None):
+        self.history = []
+        self.env = {}
+
         self.process = process
         self.command = None
         self.status_code = None
-        self.history = []
 
         self.exception = None
         self.std_err = None
         self.std_out = None
+
+    def __repr__(self):
+        if self.command:
+            return '<Response [%s]>' % (self.command[0])
+        return '<Response>'
+
+    def __iter__(self):
+        for item in self.std_out.split('\n'):
+            yield item
 
 def parse(command):
     splitter = shlex.shlex(command)
@@ -30,13 +41,12 @@ def parse(command):
     for item in stack:
         yield shlex.split(item)
 
-def run_command(command, env={}, data=None, timeout=None, cwd=None):
+def run_command(command, env=None, data=None, timeout=None, cwd=None, gevent=None):
     environment = dict(os.environ)
-    environment.update(env)
+    environment.update(env or {})
 
     response = Response()
-    if isinstance(data, unicode):
-        data = data.encode()
+    response.env = environment
 
     def callback():
         try:
@@ -73,6 +83,7 @@ def run(string, **kwargs):
             data = history[-1].std_out[0:10*1024]
 
         response = run_command(command, **kwargs)
+        response.command = command
         history.append(response)
         if response.exception:
             raise response.exception

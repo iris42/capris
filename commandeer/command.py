@@ -21,12 +21,15 @@ class Command(Runnable):
         return option_string(self.positional, self.options)
 
     def __str__(self):
-        stack = deque((self.command,))
+        stack = [self.command]
         if self.positional or self.options:
             stack.append(self.options_string)
 
         if self.base_command is not None:
-            stack.appendleft(str(self.base_command))
+            newstack = [str(self.base_command)]
+            for item in stack:
+                newstack.append(item)
+            stack = newstack
 
         return ' '.join(stack)
 
