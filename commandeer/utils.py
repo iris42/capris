@@ -25,18 +25,19 @@ def escape(string):
 def option_string(positional, options):
     stack = []
     for key, value in options.items():
-        key = ("--{key}" if len(key) > 1 else "-{key} ").format(key=optionify(key))
+        option = ("--{key}" if len(key) > 1 else "-{key}").format(key=optionify(key))
 
-        string = "{key}={value}"
-        if len(key) == 2:
-            string = '{key} {value}'
-        elif value is None:
-            string = '{key}'
+        if value is None:
+            string = '{option}'
+        elif len(key) == 1:
+            string = '{option} {value}'
+        else:
+            string = "{option}={value}"
 
         string = string.format(
-                key=key,
+                option=option,
                 value=escape(value)
-                ).strip()
+                )
         stack.append(string)
 
     for item in positional:

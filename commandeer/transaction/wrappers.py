@@ -1,7 +1,7 @@
 from commandeer.command import Command
 from commandeer.pipe import Pipe
 from commandeer.iocontext import IOContext
-from commandeer.core import Runnable
+from commandeer.runnable import Runnable
 
 
 class TransactionRunnable(Runnable):

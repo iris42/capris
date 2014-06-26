@@ -1,5 +1,5 @@
 from collections import deque
-from commandeer.core import Runnable
+from commandeer.runnable import Runnable
 from commandeer.utils import option_string, which
 
 class Command(Runnable):
@@ -8,6 +8,7 @@ class Command(Runnable):
         self.positional = list(positional)
         self.options = options
         self.base_command = None
+        self.env = {}
 
     @property
     def absolute(self):

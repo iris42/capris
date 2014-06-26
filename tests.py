@@ -80,6 +80,7 @@ class CommandTest(unittest.TestCase):
 
         wget = commandeer.Command('wget')
         assert str(wget(ssl=False)) == 'wget --ssl=false'
+        assert str(wget(l=5)) == 'wget -l 5'
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,4 +1,5 @@
-from commandeer.core import Runnable, run
+from commandeer.core import run
+from commandeer.runnable import Runnable
 
 class IOContext(Runnable):
     def __init__(self, runnable):

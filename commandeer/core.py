@@ -1,7 +1,7 @@
 import os
 import subprocess
 import threading
-from shlex import split, shlex
+import shlex
 
 
 class Response(object):
@@ -16,7 +16,7 @@ class Response(object):
         self.std_out = None
 
 def parse(command):
-    splitter = shlex(command)
+    splitter = shlex.shlex(command)
     splitter.whitespace = '|'
     splitter.whitespace_split = True
     stack = []
@@ -27,7 +27,8 @@ def parse(command):
         stack.append(token)
         continue
 
-    return list(map(split, stack))
+    for item in stack:
+        yield shlex.split(item)
 
 def run_command(command, env={}, data=None, timeout=None, cwd=None):
     environment = dict(os.environ)
@@ -65,41 +66,15 @@ def run_command(command, env={}, data=None, timeout=None, cwd=None):
         thread.join()
     return response
 
-def run(command, **kwargs):
-    command = parse(command)
+def run(string, **kwargs):
     history = []
-    for c in command:
+    for command in parse(string):
         if len(history):
             data = history[-1].std_out[0:10*1024]
 
-        response = run_command(c, **kwargs)
+        response = run_command(command, **kwargs)
         history.append(response)
 
     res = history.pop()
     res.history = history
     return res
-
-
-class Runnable(object):
-    def run(self, **kwargs):
-        response = run(str(self), **kwargs)
-        return response
-
-    def __repr__(self):
-        return '<{name} [{string}]>'.format(
-                name=self.__class__.__name__,
-                string=str(self)
-                )
-
-    def __or__(self, other):
-        if isinstance(other, Pipe):
-            other.append(self)
-            return other
-        return Pipe(self, other)
-
-    @property
-    def iostream(self):
-        return IOContext(self)
-
-from commandeer.iocontext import IOContext
-from commandeer.pipe import Pipe
