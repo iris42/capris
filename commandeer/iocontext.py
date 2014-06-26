@@ -1,5 +1,4 @@
-from envoy import run
-from commandeer.core import Runnable
+from commandeer.core import Runnable, run
 
 class IOContext(Runnable):
     def __init__(self, runnable):
