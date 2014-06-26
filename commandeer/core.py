@@ -74,6 +74,8 @@ def run(string, **kwargs):
 
         response = run_command(command, **kwargs)
         history.append(response)
+        if response.exception:
+            raise response.exception
 
     res = history.pop()
     res.history = history
