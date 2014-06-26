@@ -8,6 +8,5 @@ setup(
     author_email="packwolf58@gmail.com",
     pacakges=find_packages(),
     include_package_data=True,
-    requires=['envoy'],
     url='https://github.com/eugene-eeo/commandeer'
 )
