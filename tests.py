@@ -42,6 +42,16 @@ class IOStreamTest(unittest.TestCase):
         assert stream.input_file  == 'input'
         assert stream.output_file == 'output'
 
+    def test_callbacks(self):
+        grep = commandeer.Command('grep')
+        def callback(response):
+            assert response.std_out == 'pattern\n'
+
+        stream = StringIO('pattern\n') > grep('pattern').iostream & callback
+
+        assert stream.callbacks
+        stream.run()
+
 class PipeTest(unittest.TestCase):
     def test_pipe(self):
         pipe = commandeer.Pipe()
