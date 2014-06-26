@@ -14,6 +14,8 @@ class TransactionTest(unittest.TestCase):
             transaction.execute()
             assert transaction.history
             assert iostream.output_file.getvalue() == 'haha\n'
+            assert transaction.results[-1].std_out == 'haha\n'
+            assert transaction.results[-1].status_code == 0
 
     def test_piping(self):
         transaction = commandeer.transaction.Transaction()
