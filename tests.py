@@ -68,7 +68,7 @@ class DataTest(unittest.TestCase):
         # check that the data was only passed to the
         # first command
         assert response.std_out == 'World\n'
-        assert response.status_code == 0
+        assert list(response)   == ['World', '']
 
 class PipeTest(unittest.TestCase):
     def test_pipe(self):
