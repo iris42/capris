@@ -58,6 +58,18 @@ class IOStreamTest(unittest.TestCase):
         assert stream.callbacks
         assert context.ran
 
+class DataTest(unittest.TestCase):
+    def test_data(self):
+        grep = commandeer.Command('grep')
+        cat = commandeer.Command('cat')
+        pipe = grep('World', o=None) | cat
+        response = pipe.run(data='Hello World')
+
+        # check that the data was only passed to the
+        # first command
+        assert response.std_out == 'World\n'
+        assert response.status_code == 0
+
 class PipeTest(unittest.TestCase):
     def test_pipe(self):
         pipe = commandeer.Pipe()
