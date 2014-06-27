@@ -38,6 +38,7 @@ with strings and escaping for you.
  - Transactions and redirection
  - Built in support for pipes
  - Thread safety
+ - Works with both Python 2 and 3
 
 
 ## Installation
