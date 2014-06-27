@@ -30,16 +30,12 @@ def parse(command):
     splitter = shlex.shlex(command)
     splitter.whitespace = '|'
     splitter.whitespace_split = True
-    stack = []
     while True:
         token = splitter.get_token()
         if not token:
             break
-        stack.append(token)
+        yield shlex.split(token)
         continue
-
-    for item in stack:
-        yield shlex.split(item)
 
 def popen_callback(command, response, env, data, timeout, cwd):
     def closure():
