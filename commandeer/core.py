@@ -75,11 +75,13 @@ def run_command(command, env={}, data=None, timeout=None, cwd=None):
 
 def run(string, **kwargs):
     history = []
+    data = kwargs.pop('data') if 'data' in kwargs else None
+
     for command in parse(string):
         if len(history):
             data = history[-1].std_out[0:10*1024]
 
-        response = run_command(command, **kwargs)
+        response = run_command(command, data=data, **kwargs)
         response.command = command
         history.append(response)
         if response.exception:
