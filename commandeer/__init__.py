@@ -2,4 +2,4 @@ from commandeer.command import Command
 from commandeer.pipe import Pipe
 
 __all__ = ['Command','Pipe']
-VERSION='0.0.37'
+VERSION='0.0.38'
