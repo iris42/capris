@@ -47,13 +47,16 @@ class IOStreamTest(unittest.TestCase):
 
     def test_callbacks(self):
         grep = commandeer.Command('grep')
+        context  = type('', (object,), {'ran':False})
         def callback(response):
             assert response.std_out == 'pattern\n'
+            context.ran = True
 
         stream = StringIO('pattern\n') > grep('pattern').iostream & callback
+        stream.run()
 
         assert stream.callbacks
-        stream.run()
+        assert context.ran
 
 class PipeTest(unittest.TestCase):
     def test_pipe(self):
