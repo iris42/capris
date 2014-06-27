@@ -39,6 +39,7 @@ def parse(command):
 
 def popen_callback(command, response, env, data, timeout, cwd):
     def closure():
+        response.env = env
         try:
             process = subprocess.Popen(
                     args=command,
@@ -63,8 +64,6 @@ def run_command(command, env={}, data=None, timeout=None, cwd=None):
     environment.update(env)
 
     response = Response()
-    response.env = environment
-
     thread = threading.Thread(target=popen_callback(command, response, environment, data, timeout, cwd))
     thread.start()
 
