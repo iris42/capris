@@ -23,11 +23,19 @@ class IOStream(Runnable):
         self.input_file = handle
         return self
 
+    def __iter__(self):
+        iterable = list(self.runnable)
+        if isinstance(iterable[0], list):
+            for item in iterable:
+                yield item
+            return
+        yield iterable
+
     def run(self, *args, **kwargs):
         if 'data' not in kwargs and self.input_file is not None:
             kwargs['data'] = self.input_file.read()
 
-        response = run(str(self.runnable), *args, **kwargs)
+        response = run(list(self), *args, **kwargs)
         if self.output_file is not None:
             data = response.std_out
             self.output_file.write(data)

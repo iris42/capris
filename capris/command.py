@@ -16,6 +16,17 @@ class Command(Runnable):
         copy.command = which(self.command)
         return copy
 
+    def __iter__(self):
+        if self.base_command is not None:
+            for item in self.base_command:
+                yield item
+
+        yield self.command
+        if self.positional or self.options:
+            for item in option_string(self.positional, self.options):
+                yield item
+
+
     def __str__(self):
         stack = [self.command]
         if self.positional or self.options:

@@ -30,17 +30,6 @@ class Response(object):
                 break
             yield item
 
-def parse(command):
-    splitter = shlex.shlex(command)
-    splitter.whitespace = '|'
-    splitter.whitespace_split = True
-    while True:
-        token = splitter.get_token()
-        if not token:
-            break
-        yield shlex.split(token)
-        continue
-
 def popen_callback(command, response, env, data, timeout, cwd):
     response.command = command
     response.env = env
@@ -78,11 +67,11 @@ def run_command(command, env={}, data=None, timeout=None, cwd=None):
         thread.join()
     return response
 
-def run(string, **kwargs):
+def run(commands, **kwargs):
     history = []
     data = kwargs.pop('data') if 'data' in kwargs else None
 
-    for command in parse(string):
+    for command in commands:
         if len(history):
             data = history[-1].std_out[0:10*1024]
 

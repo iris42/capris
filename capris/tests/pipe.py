@@ -12,7 +12,7 @@ class PipeTest(CaprisTest):
         pipe += Command('ls', l=None)
         pipe += Command('grep', 'some-pattern', context=1)
 
-        assert str(pipe) == "ls -l | grep --context=1 'some-pattern'"
+        assert str(pipe) == "ls -l | grep --context=1 some-pattern"
 
     def test_or_magic(self):
         """
