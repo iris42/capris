@@ -2,8 +2,7 @@
 
 `capris` is a DSL for creating beautiful apps that leverage
 the command line in Python. `capris` purely generates commands
-and does not handle the running of commands- that is the job of
-the `envoy` library. A simple example of `capris` at work:
+and runs them. A simple example of `capris` at work:
 
 ```python
 from capris import *
