@@ -25,12 +25,25 @@ the `envoy.run` function.
 
 ### `Runnable.iostream`
 
-A property that returns a `IOContext` instance that can
+A property that returns a `IOStream` instance that can
 redirect output/input to the given runnable. For example:
 
 ```python
 >>> iostream = git.log(n=20).iostream > open('file.txt', 'w')
 >>> iostream.run()
+```
+
+You can also assign callbacks to be ran after the command
+is ran, for example to test the response object:
+
+```python
+>>> def callback(response):
+...     assert response.status_code == 0
+...     print("Got " + repr(response))
+...
+>>> iostream = git.log(n=20).iostream & callback
+>>> response = iostream.run()
+Got <Response [git]>
 ```
 
 ### `Runnable.__or__(other)`
