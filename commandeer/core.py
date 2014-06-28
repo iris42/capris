@@ -14,8 +14,8 @@ class Response(object):
         self.status_code = None
 
         self.exception = None
-        self.std_err = None
-        self.std_out = None
+        self.std_err = ''
+        self.std_out = ''
 
     def __repr__(self):
         if self.command:
@@ -23,7 +23,11 @@ class Response(object):
         return '<Response>'
 
     def __iter__(self):
-        for item in self.std_out.split('\n'):
+        iterable = self.std_out.split('\n')
+        length = len(iterable)
+        for index, item in enumerate(iterable):
+            if not item and index == (length-1):
+                break
             yield item
 
 def parse(command):
@@ -38,8 +42,9 @@ def parse(command):
         continue
 
 def popen_callback(command, response, env, data, timeout, cwd):
+    response.command = command
+    response.env = env
     def closure():
-        response.env = env
         try:
             process = subprocess.Popen(
                     args=command,
@@ -82,7 +87,6 @@ def run(string, **kwargs):
             data = history[-1].std_out[0:10*1024]
 
         response = run_command(command, data=data, **kwargs)
-        response.command = command
         history.append(response)
         if response.exception:
             raise response.exception

@@ -66,9 +66,10 @@ class DataTest(unittest.TestCase):
         response = pipe.run(data='Hello World')
 
         # check that the data was only passed to the
-        # first command
+        # first command, and response.__iter__ will
+        # throw the last string away
         assert response.std_out == 'World\n'
-        assert list(response)   == ['World', '']
+        assert list(response)   == ['World']
 
 class PipeTest(unittest.TestCase):
     def test_pipe(self):
