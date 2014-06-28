@@ -2,6 +2,25 @@ from capris.tests import CaprisTest
 
 
 class CommandTest(CaprisTest):
+    def test_env(self):
+        """
+        ``Command.env`` attribute should be copied
+        and updated by the ``data`` keyword argument
+        passed to the ``Command.run`` function when
+        the command is ran.
+        """
+        grep = self.grep()
+        grep.env = {'KEY':'hey!', 'HEY':'true'}
+        response = grep.run(env={"KEY":"yo!"})
+
+        # Command.env should be updated
+        assert response.env['KEY'] == 'yo!'
+        assert response.env['HEY'] == 'true'
+
+        # Command.env should be provided
+        response = grep.run()
+        assert response.env['KEY'] == 'hey!'
+
     def test_absolute(self):
         """
         When the ``Command.absolute`` property is

@@ -42,6 +42,7 @@ Features
 - Built in support for pipes
 - Thread safety
 - Works with both Python 2 and 3
+- High-level unit tests for all classes
 
 
 ------------
