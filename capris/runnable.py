@@ -24,7 +24,7 @@ class Runnable(object):
 
     @property
     def iostream(self):
-        return IOContext(self)
+        return IOStream(self)
 
-from capris.iocontext import IOContext
+from capris.iostream import IOStream
 from capris.pipe import Pipe

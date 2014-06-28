@@ -1,7 +1,7 @@
 from capris.core import run
 from capris.runnable import Runnable
 
-class IOContext(Runnable):
+class IOStream(Runnable):
     def __init__(self, runnable):
         self.runnable = runnable
         self.input_file = None

@@ -42,6 +42,7 @@ Features
 - Built in support for pipes
 - Thread safety
 - Works with both Python 2 and 3
+- High-level unit tests for all classes
 
 
 ------------
@@ -49,10 +50,11 @@ Installation
 ------------
 
 To install the library you can simply do a ``git clone`` and then
-either ``pip install`` locally or do a ``setup.py``. For example:
+either ``pip install`` locally or do a ``setup.py``. For example,
+to run the tests before installing:
 
 .. code-block:: bash
 
     $ git clone ssh://git@github.com/eugene-eeo/capris.git
     $ cd capris
-    $ pip install .
+    $ python -m "capris.tests" && python setup.py install

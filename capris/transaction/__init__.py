@@ -36,6 +36,7 @@ class Transaction(object):
     def abort(self):
         with self.threadlock:
             self.lock = True
+            del self.history[:]
 
     def execute(self):
         with self.threadlock:
