@@ -4,9 +4,9 @@ h1       { margin-bottom: 0px; text-align: center; }
 img#spinner { padding-right: 10px; }
 code     { font-family: "Consolas", "Monaco", monospace; font-size: 15px; }
 pre      { background-color: #f8f8f8; overflow-x: scroll; margin: auto -20px; padding: 0px 20px; }
-code.hjls    { background-color: #f8f8f8; }
 
-span.hljs-prompt  { color: #777; }
-span.hljs-keyword { color: #000; font-weight: bold; }
-span.hljs-number  { color: #009999; }
-span.hjls-string  { color: #dd1144; }
+span.operator  { color: #777; }
+span.keyword   { color: #000; font-weight: bold; }
+span.variable,
+span.number    { color: #009999; }
+span.string    { color: #dd1144; }

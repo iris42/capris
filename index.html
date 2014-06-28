@@ -1,20 +1,59 @@
 <!doctype html>
 <html>
 <head>
-  <title>Comandeer</title>
-  <link rel="stylesheet" href="assets/default.min.css">
+  <title>Capris</title>
   <link rel="stylesheet" href="assets/style.css">
-
-  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-  <script src="assets/markdown.js"></script>
-  <script src="assets/app.js"></script>
-  <script src="assets/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
-  <div id="container">
-    <img id='spinner' src='assets/spinner.gif' width=25 height=25 align=left>
-    <b>Hold on, pulling the latest data.</b>
-  </div>
+  <div id="container"><div class="document" id="capris">
+<h1 class="title">Capris</h1>
+<p>Capris is a MIT-licensed Python library built for writing
+composable apps that leverage the command line.</p>
+<p>A simple example of writing your own git wrapper, complete
+with other command-line utilities that you love and use on
+a daily basis:</p>
+<pre class="code python literal-block">
+<span class="operator">&gt;&gt;&gt;</span> <span class="keyword namespace">from</span> <span class="name namespace">capris</span> <span class="keyword namespace">import</span> <span class="name">Command</span>
+<span class="operator">&gt;&gt;&gt;</span> <span class="name">git</span><span class="punctuation">,</span> <span class="name">grep</span> <span class="operator">=</span> <span class="name">Command</span><span class="punctuation">(</span><span class="literal string">'git'</span><span class="punctuation">),</span> <span class="name">Command</span><span class="punctuation">(</span><span class="literal string">'grep'</span><span class="punctuation">)</span>
+
+<span class="operator">&gt;&gt;&gt;</span> <span class="name">pipe</span> <span class="operator">=</span> <span class="name">git</span><span class="operator">.</span><span class="name">log</span><span class="punctuation">(</span><span class="name">n</span><span class="operator">=</span><span class="literal number integer">10</span><span class="punctuation">,</span> <span class="name">pretty</span><span class="operator">=</span><span class="literal string">&quot;oneline&quot;</span><span class="punctuation">)</span> <span class="operator">|</span> <span class="name">grep</span><span class="punctuation">(</span><span class="literal string">r'[a-f0-9]\{40\}'</span><span class="punctuation">,</span> <span class="name">o</span><span class="operator">=</span><span class="name builtin pseudo">None</span><span class="punctuation">)</span>
+<span class="operator">&gt;&gt;&gt;</span> <span class="name builtin">str</span><span class="punctuation">(</span><span class="name">pipe</span><span class="punctuation">)</span>
+<span class="literal string">&quot;git log -n 10 --pretty='oneline' | grep -o '[a-f0-9]\{40\}'&quot;</span>
+
+<span class="operator">&gt;&gt;&gt;</span> <span class="name">response</span> <span class="operator">=</span> <span class="name">pipe</span><span class="operator">.</span><span class="name">run</span><span class="punctuation">()</span>
+<span class="operator">&gt;&gt;&gt;</span> <span class="name">response</span><span class="operator">.</span><span class="name">status_code</span>
+<span class="literal number integer">0</span>
+<span class="operator">&gt;&gt;&gt;</span> <span class="keyword">print</span> <span class="name">response</span><span class="operator">.</span><span class="name">std_out</span>
+<span class="operator">...</span>
+</pre>
+<p><tt class="docutils literal">capris</tt> allows you to write code that just calls commands
+and helps you focus on writing the <cite>commands that you need</cite>,
+not the code required to handle calling and getting responses
+from the commands. <tt class="docutils literal">capris</tt> does all of the mucking around
+with strings and escaping for you.</p>
+<div class="section" id="features">
+<h1>Features</h1>
+<ul class="simple">
+<li>DSL for command generation</li>
+<li>Support for nested subcommands</li>
+<li>Smart option generation</li>
+<li>Transactions and redirection</li>
+<li>Built in support for pipes</li>
+<li>Thread safety</li>
+<li>Works with both Python 2 and 3</li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h1>Installation</h1>
+<p>To install the library you can simply do a <tt class="docutils literal">git clone</tt> and then
+either <tt class="docutils literal">pip install</tt> locally or do a <tt class="docutils literal">setup.py</tt>. For example:</p>
+<pre class="code bash literal-block">
+<span class="name variable">$ </span>git clone ssh://git&#64;github.com/eugene-eeo/capris.git
+<span class="name variable">$ </span><span class="name builtin">cd </span>capris
+<span class="name variable">$ </span>pip install .
+</pre>
+</div>
+</div>
+</div>
 </body>
 </html>
