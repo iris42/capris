@@ -49,12 +49,8 @@ Features
 Installation
 ------------
 
-To install the library you can simply do a ``git clone`` and then
-either ``pip install`` locally or do a ``setup.py``. For example,
-to run the tests before installing:
+To install Capris, simply:
 
 .. code-block:: bash
 
-    $ git clone ssh://git@github.com/eugene-eeo/capris.git
-    $ cd capris
-    $ python -m "capris.tests" && python setup.py install
+    $ pip install capris
