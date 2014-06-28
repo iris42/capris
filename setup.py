@@ -4,6 +4,8 @@ import commandeer
 setup(
     name="commandeer",
     version=commandeer.VERSION,
+    description="Wrapper for doing beautiful commands",
+    long_description=open('README.rst').read(),
     author="Eugene Eeo",
     author_email="packwolf58@gmail.com",
     pacakges=find_packages(),
