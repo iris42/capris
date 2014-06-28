@@ -20,8 +20,9 @@ class Transaction(object):
         return command
 
     def append(self, thing):
-        if not self.lock:
-            self.history.append(thing)
+        with self.threadlock:
+            if not self.lock:
+                self.history.append(thing)
 
     def reset(self):
         with self.threadlock:
@@ -38,8 +39,6 @@ class Transaction(object):
 
     def execute(self):
         with self.threadlock:
-            if self.lock:
-                return []
             for command, runner, args, kwargs in self.history:
                 response = runner(command, *args, **kwargs)
                 self.results.append(response)

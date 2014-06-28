@@ -34,8 +34,8 @@ class TransactionPipe(TransactionRunnable, Pipe): pass
 class TransactionIOContext(TransactionRunnable, IOContext): pass
 
 class TransactionCommand(TransactionRunnable, Command):
-    def copy(self, base):
-        copy = Command.copy(self, TransactionCommand)
+    def copy(self):
+        copy = Command.copy(self)
         copy.history = self.history
         return copy
 

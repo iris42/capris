@@ -12,7 +12,7 @@ class Command(Runnable):
 
     @property
     def absolute(self):
-        copy = self.copy(self.__class__)
+        copy = self.copy()
         copy.command = which(self.command)
         return copy
 
@@ -41,13 +41,13 @@ class Command(Runnable):
 
         return values[attribute]
 
-    def copy(self, base):
-        copy = base(self.command, *self.positional, **self.options)
+    def copy(self):
+        copy = self.__class__(self.command, *self.positional, **self.options)
         copy.base_command = self.base_command
         return copy
 
     def __call__(self, *args, **kwargs):
-        copy = self.copy(self.__class__)
+        copy = self.copy()
         copy.positional.extend(args)
         copy.options.update(kwargs)
         return copy
