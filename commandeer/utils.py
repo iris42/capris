@@ -2,7 +2,6 @@ from re import compile
 import os
 
 regex = compile(r'\$(\{[a-zA-Z.]+\}|[a-zA-Z.]+)')
-optionify = lambda string: string.replace('_', '-')
 
 def which(executable):
     path = os.getenv('PATH')
@@ -10,7 +9,7 @@ def which(executable):
         fpath = os.path.join(directory, executable)
         if os.path.exists(fpath) and os.access(fpath, os.X_OK):
             return fpath
-    return executable
+    raise ValueError('executable {name} is not found'.format(name=executable))
 
 def escape(string):
     if string in (True, False):
@@ -23,31 +22,17 @@ def escape(string):
     return "'%s'" % (string)
 
 def option_string(positional, options):
-    stack = []
     for key, value in options.items():
-        option = ("--{key}" if len(key) > 1 else "-{key}").format(key=optionify(key))
+        option = ("--{key}" if len(key) > 1 else \
+                  "-{key}").format(key=key.replace('_','-'))
 
-        if value is None:
-            string = '{option}'
-        elif len(key) == 1:
-            string = '{option} {value}'
-        else:
-            string = "{option}={value}"
-
-        string = string.format(
+        string = ("{option}" if value is None else \
+                  "{option} {value}" if len(key) == 1 else \
+                  "{option}={value}")
+        yield string.format(
                 option=option,
                 value=escape(value)
                 )
-        stack.append(string)
 
     for item in positional:
-        stack.append(escape(item))
-    return ' '.join(stack)
-
-def fetch_value(values, key, default):
-    keys = key.split('.')
-    for item in keys:
-        if item not in values:
-            return default
-        values = values[item]
-    return values
+        yield escape(item)

@@ -18,7 +18,7 @@ class Command(Runnable):
 
     @property
     def options_string(self):
-        return option_string(self.positional, self.options)
+        return ' '.join(option_string(self.positional, self.options))
 
     def __str__(self):
         stack = [self.command]
