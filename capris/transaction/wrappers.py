@@ -1,6 +1,6 @@
 from capris.command import Command
 from capris.pipe import Pipe
-from capris.iocontext import IOContext
+from capris.iostream import IOStream
 from capris.runnable import Runnable
 
 
@@ -15,7 +15,7 @@ class TransactionRunnable(Runnable):
 
     @property
     def iostream(self):
-        iostream = TransactionIOContext(self)
+        iostream = TransactionIOStream(self)
         iostream.history = self.history
         return iostream
 
@@ -31,7 +31,7 @@ class TransactionRunnable(Runnable):
 
 
 class TransactionPipe(TransactionRunnable, Pipe): pass
-class TransactionIOContext(TransactionRunnable, IOContext): pass
+class TransactionIOStream(TransactionRunnable, IOStream): pass
 
 class TransactionCommand(TransactionRunnable, Command):
     def copy(self):
