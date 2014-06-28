@@ -1,8 +1,8 @@
-==========
-Commandeer
-==========
+======
+Capris
+======
 
-Commandeer is a MIT-licensed Python library built for writing
+Capris is a MIT-licensed Python library built for writing
 composable apps that leverage the command line.
 
 A simple example of writing your own git wrapper, complete
@@ -11,7 +11,7 @@ a daily basis:
 
 .. code-block:: python
 
-    >>> from commandeer import Command
+    >>> from capris import Command
     >>> git, grep = Command('git'), Command('grep')
 
     >>> pipe = git.log(n=10, pretty="oneline") | grep(r'[a-f0-9]\{40\}', o=None)
@@ -24,10 +24,10 @@ a daily basis:
     >>> print response.std_out
     ...
 
-``commandeer`` allows you to write code that just calls commands
+``capris`` allows you to write code that just calls commands
 and helps you focus on writing the `commands that you need`,
 not the code required to handle calling and getting responses
-from the commands. ``commandeer`` does all of the mucking around
+from the commands. ``capris`` does all of the mucking around
 with strings and escaping for you.
 
 
@@ -53,6 +53,6 @@ either ``pip install`` locally or do a ``setup.py``. For example:
 
 .. code-block:: bash
 
-    $ git clone ssh://git@github.com/eugene-eeo/commandeer.git
-    $ cd commandeer
+    $ git clone ssh://git@github.com/eugene-eeo/capris.git
+    $ cd capris
     $ pip install .
