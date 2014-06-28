@@ -16,14 +16,10 @@ class Command(Runnable):
         copy.command = which(self.command)
         return copy
 
-    @property
-    def options_string(self):
-        return ' '.join(option_string(self.positional, self.options))
-
     def __str__(self):
         stack = [self.command]
         if self.positional or self.options:
-            stack.append(self.options_string)
+            stack.extend(option_string(self.positional, self.options))
 
         if self.base_command is not None:
             newstack = [str(self.base_command)]
