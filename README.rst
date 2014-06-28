@@ -16,7 +16,7 @@ a daily basis:
 
     >>> pipe = git.log(n=10, pretty="oneline") | grep(r'[a-f0-9]\{40\}', o=None)
     >>> str(pipe)
-    "git log -n 10 --pretty='oneline' | grep -o '[a-f0-9]\{40\}'"
+    "git log -n 10 --pretty=oneline | grep -o [a-f0-9]\{40\}"
 
     >>> response = pipe.run()
     >>> response.status_code
@@ -43,6 +43,7 @@ Features
 - Thread safety
 - Works with both Python 2 and 3
 - High-level unit tests for all classes
+- Safe- `capris` doesn't touch the shell
 
 
 ------------
