@@ -1,4 +1,4 @@
-from commandeer.runnable import Runnable
+from capris.runnable import Runnable
 
 class Pipe(Runnable):
     def __init__(self, *commands):

@@ -1,4 +1,4 @@
-## `commandeer.Runnable`
+## `capris.Runnable`
 
 The `Runnable` class represents a `run`-able object, or
 an object that supports the `run` API. All `Pipe`s, `Command`s,

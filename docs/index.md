@@ -1,12 +1,12 @@
-# Commandeer
+# Capris
 
-`commandeer` is a DSL for creating beautiful apps that leverage
-the command line in Python. `commandeer` purely generates commands
+`capris` is a DSL for creating beautiful apps that leverage
+the command line in Python. `capris` purely generates commands
 and does not handle the running of commands- that is the job of
-the `envoy` library. A simple example of `commandeer` at work:
+the `envoy` library. A simple example of `capris` at work:
 
 ```python
-from commandeer import *
+from capris import *
 git = Command('git')
 grep = Command('grep')
 
@@ -14,12 +14,12 @@ pipe = git.log(graph=None) | grep('commit: [a-f0-9]\{40\}')
 response = pipe.run()
 ```
 
-There are three base classes in `commandeer`- `Command`, `Pipe`,
+There are three base classes in `capris`- `Command`, `Pipe`,
 and `IOContext`. If you are not piping commands or doing
 redirection you are most likely to just use the `Command`
 class.
 
-## `commandeer.command.Command`
+## `capris.command.Command`
 
 A `Command` object represents a single command which can be
 chained to create readable subcommands. It only has a few

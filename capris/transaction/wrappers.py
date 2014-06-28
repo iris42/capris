@@ -1,7 +1,7 @@
-from commandeer.command import Command
-from commandeer.pipe import Pipe
-from commandeer.iocontext import IOContext
-from commandeer.runnable import Runnable
+from capris.command import Command
+from capris.pipe import Pipe
+from capris.iocontext import IOContext
+from capris.runnable import Runnable
 
 
 class TransactionRunnable(Runnable):

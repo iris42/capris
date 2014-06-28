@@ -5,7 +5,7 @@ in sequence, and will be executed as far as one command/pipe
 doesn't fail. For example:
 
 ```python
-from commandeer.transaction import Transaction
+from capris.transaction import Transaction
 transaction = Transaction()
 
 with transaction:

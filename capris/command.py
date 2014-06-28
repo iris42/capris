@@ -1,6 +1,6 @@
 from collections import deque
-from commandeer.runnable import Runnable
-from commandeer.utils import option_string, which
+from capris.runnable import Runnable
+from capris.utils import option_string, which
 
 class Command(Runnable):
     def __init__(self, command, *positional, **options):

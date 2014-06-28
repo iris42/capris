@@ -1,4 +1,4 @@
-from commandeer.core import run
+from capris.core import run
 
 class Runnable(object):
     def run(self, **kwargs):
@@ -26,5 +26,5 @@ class Runnable(object):
     def iostream(self):
         return IOContext(self)
 
-from commandeer.iocontext import IOContext
-from commandeer.pipe import Pipe
+from capris.iocontext import IOContext
+from capris.pipe import Pipe

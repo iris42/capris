@@ -1,5 +1,5 @@
-from commandeer.core import run
-from commandeer.runnable import Runnable
+from capris.core import run
+from capris.runnable import Runnable
 
 class IOContext(Runnable):
     def __init__(self, runnable):

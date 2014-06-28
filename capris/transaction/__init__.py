@@ -49,4 +49,4 @@ class Transaction(object):
     def __exit__(self, *ignored):
         self.reset()
 
-from commandeer.transaction.wrappers import TransactionCommand
+from capris.transaction.wrappers import TransactionCommand
