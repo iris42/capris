@@ -1,4 +1,4 @@
-from capris.core import run
+from capris.core import run_command
 
 class Runnable(object):
     def run(self, **kwargs):
@@ -7,7 +7,7 @@ class Runnable(object):
             env.update(kwargs.pop('env') if 'env' in kwargs else {})
             kwargs['env'] = env
 
-        response = run(str(self), **kwargs)
+        response = run_command(list(self), **kwargs)
         return response
 
     def __repr__(self):

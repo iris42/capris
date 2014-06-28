@@ -15,11 +15,10 @@ def escape(string):
     if string in (True, False):
         return str(string).lower()
 
-    if isinstance(string, int):
+    if isinstance(string, (float, int)):
         return str(string)
-    string = str(string).replace("'", "\\'")\
-                        .replace('"', '\\"')
-    return "'%s'" % (string)
+
+    return string
 
 def option_string(positional, options):
     for key, value in options.items():

@@ -1,3 +1,4 @@
+from capris.core import run_command
 from capris.runnable import Runnable
 
 class Pipe(Runnable):
@@ -9,6 +10,10 @@ class Pipe(Runnable):
         for item in self.commands:
             stack.append(str(item))
         return ' | '.join(stack)
+
+    def __iter__(self):
+        for item in self.commands:
+            yield list(item)
 
     def append(self, command):
         self.commands.append(command)

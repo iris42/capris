@@ -54,10 +54,10 @@ class CommandTest(CaprisTest):
         properly.
         """
         command = self.grep(option="string", boolean=False, other=True)
-        assert set(str(command).split()) == {'grep', "--option='string'", "--boolean=false", "--other=true"}
+        assert set(str(command).split()) == {'grep', "--option=string", "--boolean=false", "--other=true"}
 
         command = self.grep('pattern', n=1, o=None)
-        assert set(str(command).split()) == {"grep", "-n", "1", "'pattern'", "-o"}
+        assert set(str(command).split()) == {"grep", "-n", "1", "pattern", "-o"}
 
         command = self.grep('"Hello"')
-        assert str(command) == 'grep \'\\"Hello\\"\''
+        assert str(command) == 'grep "Hello"'
