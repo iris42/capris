@@ -26,11 +26,18 @@ class IOStreamTest(CaprisTest):
         """
         context = []
         def callback(response):
-            context.append(response)
-            assert response.status_code != 0
-            assert response.std_out != 'pattern\n'
+            # cat always returns 0...
+            self.helpers.assert_ok(response)
 
-        stream = self.helpers.stringio('pattern\n') > self.grep('pattern').iostream & callback
+            # but the status code for grep is 1
+            for item in response.history:
+                assert item.status_code != 0
+
+            # cat nothing == nothing
+            assert response.std_out == ''
+            context.append(response)
+
+        stream = self.helpers.stringio('pattern\n') > (self.grep('pattern') | self.cat).iostream & callback
         response = stream.run(data='not even\n')
 
         assert context
