@@ -39,11 +39,11 @@ is ran, for example to test the response object:
 ```python
 >>> def callback(response):
 ...     assert response.status_code == 0
-...     print(response)
+...     print("Got " + repr(response))
 ...
 >>> iostream = git.log(n=20).iostream & callback
->>> iostream.run()
-<Response [git]>
+>>> response = iostream.run()
+Got <Response [git]>
 ```
 
 ### `Runnable.__or__(other)`
