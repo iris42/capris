@@ -35,13 +35,13 @@ with strings and escaping for you.
 Features
 --------
 
- - DSL for command generation
- - Support for nested subcommands
- - Smart option generation
- - Transactions and redirection
- - Built in support for pipes
- - Thread safety
- - Works with both Python 2 and 3
+- DSL for command generation
+- Support for nested subcommands
+- Smart option generation
+- Transactions and redirection
+- Built in support for pipes
+- Thread safety
+- Works with both Python 2 and 3
 
 
 ------------
@@ -51,7 +51,8 @@ Installation
 To install the library you can simply do a ``git clone`` and then
 either ``pip install`` locally or do a ``setup.py``. For example:
 
-.. code-block:: sh
+.. code-block:: bash
+
     $ git clone ssh://git@github.com/eugene-eeo/commandeer.git
     $ cd commandeer
     $ pip install .
