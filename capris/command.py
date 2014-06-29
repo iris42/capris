@@ -1,4 +1,5 @@
 from collections import deque
+from capris.core import run_command
 from capris.runnable import Runnable
 from capris.utils import option_string, which
 
@@ -26,6 +27,13 @@ class Command(Runnable):
             for item in option_string(self.positional, self.options):
                 yield item
 
+    def run(self, **kwargs):
+        env = self.env.copy()
+        env.update(kwargs.pop('env') if 'env' in kwargs else {})
+        kwargs['env'] = env
+
+        response = run_command(list(self), **kwargs)
+        return response
 
     def __str__(self):
         stack = [self.command]

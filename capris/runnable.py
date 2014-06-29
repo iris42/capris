@@ -1,14 +1,6 @@
-from capris.core import run_command
-
 class Runnable(object):
-    def run(self, **kwargs):
-        if hasattr(self, 'env'):
-            env = self.env.copy()
-            env.update(kwargs.pop('env') if 'env' in kwargs else {})
-            kwargs['env'] = env
-
-        response = run_command(list(self), **kwargs)
-        return response
+    def run(self):
+        raise NotImplementedError
 
     def __repr__(self):
         return '<{name} [{string}]>'.format(
