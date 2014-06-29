@@ -31,12 +31,12 @@ class TransactionTest(CaprisTest):
             iostream = self.helpers.stringio('haha') > grep('haha').iostream > self.helpers.stringio()
             iostream.run()
 
-            transaction.execute()
+            results = transaction.execute()
             assert transaction.history
             assert iostream.output_file.getvalue() == 'haha\n'
 
-            assert self.helpers.last_response(transaction).std_out == 'haha\n'
-            assert self.helpers.last_response(transaction).status_code == 0
+            assert results[-1].std_out == 'haha\n'
+            assert results[-1].status_code == 0
 
     def test_piping(self):
         """
@@ -64,4 +64,3 @@ class TransactionTest(CaprisTest):
             git = transaction.git()
             git.run()
             assert transaction.history
-            assert not transaction.results

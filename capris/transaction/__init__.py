@@ -3,7 +3,6 @@ from threading import Lock
 class Transaction(object):
     def __init__(self):
         self.history = []
-        self.results = []
         self.threadlock = Lock()
         self.lock = False
 
@@ -24,10 +23,10 @@ class Transaction(object):
             if not self.lock:
                 self.history.append(thing)
 
-    def reset(self):
+    def reset(self, delete_history=True):
         with self.threadlock:
-            del self.history[:]
-            del self.results[:]
+            if delete_history:
+                del self.history[:]
             self.lock = False
 
     def __enter__(self):
@@ -35,19 +34,23 @@ class Transaction(object):
 
     def abort(self):
         with self.threadlock:
-            self.lock = True
             del self.history[:]
+            self.stop()
+
+    def stop(self):
+        with self.threadlock:
+            self.lock = True
 
     def execute(self):
-        with self.threadlock:
-            for obj, runner, args, kwargs in self.history:
-                response = runner(obj, *args, **kwargs)
-                self.results.append(response)
-                if response.status_code != 0:
-                    raise RuntimeError( "runnable %s failed" % (repr(obj) ))
-        return self.results
+        results = []
+        for obj, runner, args, kwargs in self.history:
+            response = runner(obj, *args, **kwargs)
+            results.append(response)
+            if response.status_code != 0:
+                raise RuntimeError( "runnable %s failed" % (repr(obj) ))
+        return results
 
     def __exit__(self, *ignored):
-        self.reset()
+        self.reset(delete_history=False)
 
 from capris.transaction.wrappers import TransactionCommand
