@@ -40,11 +40,11 @@ class Transaction(object):
 
     def execute(self):
         with self.threadlock:
-            for command, runner, args, kwargs in self.history:
-                response = runner(command, *args, **kwargs)
+            for obj, runner, args, kwargs in self.history:
+                response = runner(obj, *args, **kwargs)
                 self.results.append(response)
                 if response.status_code != 0:
-                    break
+                    raise RuntimeError( "runnable %s failed" % (repr(obj) ))
         return self.results
 
     def __exit__(self, *ignored):
