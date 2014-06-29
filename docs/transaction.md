@@ -1,8 +1,9 @@
 # Transactions
 
-Transactions represent a series of commands that can be ran
-in sequence, and will be executed as far as one command/pipe
-doesn't fail. For example:
+Transactions represent a series of commands that can be
+ran in sequence, and will be executed as far as one
+runnable doesn't fail, sort of like a `Makefile`. For
+example:
 
 ```python
 from capris.transaction import Transaction
@@ -21,13 +22,10 @@ with transaction:
     assert transaction.results[0].status_code == 0
 ```
 
-The commands in a transaction will be ran in sequence when the
-`with` block exits, and store the responses in a `results`
-variable. The `results` variable will then be cleared when a
-new `with` block enters. When you abort a transaction, the
-block will still continue execution but commands added either
-previously or in the future will not be executed and the
-transaction history will be cleared.
+When you abort a transaction, the block will still continue
+execution but commands added either previously or in the
+future will not be executed and the transaction history
+will be cleared.
 
  - `Transaction.lock`
  - `Transaction.abort`
