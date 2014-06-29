@@ -1,6 +1,8 @@
 from capris.core import run
 from capris.runnable import Runnable
 
+__all__ = ['Pipe']
+
 class Pipe(Runnable):
     def __init__(self, *commands):
         self.commands = list(commands)

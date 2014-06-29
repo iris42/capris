@@ -3,6 +3,8 @@ from capris.core import run_command
 from capris.runnable import Runnable
 from capris.utils import option_string, which
 
+__all__ = ['Command']
+
 class Command(Runnable):
     def __init__(self, command, *positional, **options):
         self.command = command

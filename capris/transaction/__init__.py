@@ -1,4 +1,5 @@
 from threading import Lock
+from capris.transaction.wrappers import TransactionCommand
 
 __all__ = ['Transaction']
 
@@ -54,5 +55,3 @@ class Transaction(object):
 
     def __exit__(self, *ignored):
         self.reset(delete_history=False)
-
-from capris.transaction.wrappers import TransactionCommand

@@ -1,3 +1,5 @@
+__all__ = ['Runnable']
+
 class Runnable(object):
     def run(self):
         raise NotImplementedError
