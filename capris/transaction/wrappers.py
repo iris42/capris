@@ -1,8 +1,9 @@
-from capris.command import Command
-from capris.pipe import Pipe
-from capris.iostream import IOStream
 from capris.runnable import Runnable
+from capris.command import Command
+from capris.iostream import IOStream
+from capris.pipe import Pipe
 
+__all__ = ['TransactionPipe', 'TransactionIOStream', 'TransactionCommand']
 
 class TransactionRunnable(Runnable):
     def __or__(self, other):

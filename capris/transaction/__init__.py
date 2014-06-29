@@ -1,5 +1,7 @@
 from threading import Lock
 
+__all__ = ['Transaction']
+
 class Transaction(object):
     def __init__(self):
         self.history = []
