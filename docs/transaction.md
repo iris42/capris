@@ -30,7 +30,6 @@ will be cleared.
  - `Transaction.lock`
  - `Transaction.abort`
  - `Transaction.execute`
- - `Transaction.results`
  - `Transaction.history`
 
 ### `Transaction.lock`
@@ -51,21 +50,15 @@ conditions are met.
 Executes the transaction. The `execute` method will only run
 sequential commands as long as the previous command succeeds,
 and you must call it to execute your commands within the `with`
-block.
+block. Returns a list of responses.
 
 ```python
 for item in self.history:
     response = item.run()
-    self.results.append(response)
+    results.append(response)
     if response.status_code != 0:
-        break
+        raise RuntimeError
 ```
-
-### `Transaction.results`
-
-An attribute that contains the responses from each of the commands
-of the last transaction. It is automatically cleared at block entry
-and exit.
 
 ### `Transaction.history`
 
