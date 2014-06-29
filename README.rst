@@ -10,7 +10,6 @@ with other command-line utilities that you love and use on
 a daily basis:
 
 .. code-block:: python
-
     >>> from capris import Command
     >>> git, grep = Command('git'), Command('grep')
 
@@ -53,5 +52,4 @@ Installation
 To install Capris, simply:
 
 .. code-block:: bash
-
     $ pip install capris
