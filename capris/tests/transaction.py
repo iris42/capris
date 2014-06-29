@@ -2,6 +2,23 @@ from capris.tests import CaprisTest
 from capris.transaction import Transaction
 
 class TransactionTest(CaprisTest):
+    def test_stop(self):
+        """
+        Assert that the ``Transaction.stop`` function will
+        lock the transaction object but not clear the
+        history.
+        """
+        transaction = Transaction()
+        with transaction:
+            grep = transaction.grep()
+            for i in range(5):
+                grep.run()
+            transaction.stop()
+            grep.run()
+
+            assert transaction.lock
+            assert transaction.history
+
     def test_abort(self):
         """
         Assert that the ``Transaction.abort`` function will
@@ -57,10 +74,12 @@ class TransactionTest(CaprisTest):
         """
         Assert that running a command within a transaction
         without calling the ``Transaction.execute`` function
-        will not really run the command.
+        will not really run the command. Also assert that
+        the history of a transaction is preserved on block
+        exit.
         """
         transaction = Transaction()
         with transaction:
             git = transaction.git()
             git.run()
-            assert transaction.history
+        assert transaction.history

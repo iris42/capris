@@ -35,7 +35,7 @@ class Transaction(object):
     def abort(self):
         with self.threadlock:
             del self.history[:]
-            self.stop()
+            self.lock = True
 
     def stop(self):
         with self.threadlock:
