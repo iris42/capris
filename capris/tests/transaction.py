@@ -1,85 +1,80 @@
 from capris.tests import CaprisTest
-from capris.transaction import Transaction
+from capris.transaction import transactional
 
 class TransactionTest(CaprisTest):
-    def test_stop(self):
+    def test_basic(self):
         """
-        Assert that the ``Transaction.stop`` function will
-        lock the transaction object but not clear the
-        history.
+        The @transactional decorator should call the
+        decorated function with a transaction object
+        as the first argument. The transaction object
+        should be ``defined`` once the transactional
+        commands are ran. Also assert that the commands
+        are not ran when `[command].run` is called.
         """
-        transaction = Transaction()
-        with transaction:
-            grep = transaction.grep()
-            for i in range(5):
-                grep.run()
-            transaction.stop()
-            grep.run()
+        @transactional
+        def setup(transaction):
+            grep = transaction.grep
+            assert not grep.run()
+            return transaction
 
-            assert transaction.lock
-            assert transaction.history
+        transaction = setup()
+        assert transaction.commands
+        assert transaction.defined
 
-    def test_abort(self):
+    def test_pipe(self):
         """
-        Assert that the ``Transaction.abort`` function will
-        lock the transaction object by setting the ``lock``
-        attribute and then clear the history.
+        Transaction object's commands should wrap
+        pipe objects properly and have lazy running
+        behaviour.
         """
-        transaction = Transaction()
-        with transaction:
-            grep = transaction.grep()
-            for i in range(5):
-                grep.run()
-            transaction.abort()
-            grep.run()
+        @transactional
+        def setup(transaction, run=False):
+            grep = transaction.grep
+            echo = transaction.echo
+            pipe = echo('pattern') | transaction.cat
+            assert not pipe.run()
 
-            assert transaction.lock
-            assert not transaction.history
+            if run:
+                return transaction.execute()
+            return transaction
+
+        transaction = setup()
+        assert transaction.defined
+        assert setup(run=True)[0].std_out == 'pattern\n'
 
     def test_iostream(self):
         """
-        Test that the ``TransactionRunnable.iostream`` property
-        will run properly and not run the ``Transaction*`` objects
-        but instead run a string.
+        The transaction object's commands should wrap
+        iostream objects and encapsulate them properly
+        with subclasses, and run later on.
         """
-        transaction = Transaction()
-        with transaction:
-            grep = transaction.grep()
-            iostream = self.helpers.stringio('haha') > grep('haha').iostream > self.helpers.stringio()
-            iostream.run()
+        @transactional
+        def setup(transaction, run=False):
+            cat = transaction.cat
+            iostream = self.helpers.stringio('pattern') > cat.iostream
+            assert not iostream.run()
 
-            results = transaction.execute()
-            assert transaction.history
-            assert iostream.output_file.getvalue() == 'haha\n'
+            if run:
+                return transaction.execute()
+            return transaction
 
-            assert results[-1].std_out == 'haha\n'
-            assert results[-1].status_code == 0
+        transaction = setup()
+        assert transaction.defined
+        # cat doesn't add a newline
+        assert setup(run=True)[0].std_out == 'pattern'
 
-    def test_piping(self):
+    def test_exception(self):
         """
-        Assert that the running piped commands will only append
-        the pipe object to the transaction history, and not the
-        commands contained in the pipe object.
+        Assert that the transaction object should
+        throw a RuntimeError if a command exits
+        with a nonzero status code.
         """
-        transaction = Transaction()
-        with transaction:
-            git = transaction.git()
-            grep = transaction.grep()
-            pipe = git.log(n=10) | grep('commit')
-            pipe.run()
+        @transactional
+        def setup(transaction):
+            grep = transaction.grep
+            grep('pattern').run(data="")
+            return transaction
 
-            assert len(transaction.history) == 1
+        transaction = setup()
+        self.assertRaises(RuntimeError, transaction.execute)
 
-    def test_transaction(self):
-        """
-        Assert that running a command within a transaction
-        without calling the ``Transaction.execute`` function
-        will not really run the command. Also assert that
-        the history of a transaction is preserved on block
-        exit.
-        """
-        transaction = Transaction()
-        with transaction:
-            git = transaction.git()
-            git.run()
-        assert transaction.history

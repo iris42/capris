@@ -17,7 +17,7 @@ def escape(string):
         return str(string).lower()
     return str(string)
 
-def option_string(positional, options):
+def option_iterable(positional, options):
     for key, value in options.items():
         is_argument = len(key) == 1
         option = ("-%s" if is_argument else \
