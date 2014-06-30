@@ -14,11 +14,11 @@ class Pipe(Runnable):
         return ' | '.join(stack)
 
     def run(self, **kwargs):
-        return run(list(self) **kwargs)
+        return run(tuple(self), **kwargs)
 
     def __iter__(self):
         for item in self.commands:
-            yield list(item)
+            yield tuple(item)
 
     def append(self, command):
         self.commands.append(command)

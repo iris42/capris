@@ -1,37 +1,34 @@
-from re import compile
 import os
 
-regex = compile(r'\$(\{[a-zA-Z.]+\}|[a-zA-Z.]+)')
-
 def which(executable):
-    path = os.getenv('PATH')
-    for directory in path.split(os.path.pathsep):
+    if os.path.exists(executable):
+        return os.path.abspath(executable)
+
+    path = os.getenv('PATH') or os.defpath
+
+    for directory in path.split(os.pathsep):
         fpath = os.path.join(directory, executable)
         if os.path.exists(fpath) and os.access(fpath, os.X_OK):
             return fpath
-    raise ValueError('executable {name} is not found'.format(name=executable))
+    raise RuntimeError('executable {name} is not found'.format(name=executable))
 
 def escape(string):
     if string in (True, False):
         return str(string).lower()
-
-    if isinstance(string, (float, int)):
-        return str(string)
-
-    return string
+    return str(string)
 
 def option_string(positional, options):
     for key, value in options.items():
-        option = ("--{key}" if len(key) > 1 else \
-                  "-{key}").format(key=key.replace('_','-'))
+        is_argument = len(key) == 1
+        option = ("-%s" if is_argument else \
+                  "--%s") % key.replace('_', '-')
 
-        string = ("{option}" if value is None else \
-                  "{option} {value}" if len(key) == 1 else \
-                  "{option}={value}")
-        yield string.format(
-                option=option,
-                value=escape(value)
-                )
+        if value is None:
+            yield option
+            continue
+        string = "%s %s" if is_argument else \
+                 "%s=%s"
+        yield string % (option, escape(value))
 
     for item in positional:
         yield escape(item)

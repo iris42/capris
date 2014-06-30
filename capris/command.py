@@ -31,10 +31,11 @@ class Command(Runnable):
 
     def run(self, **kwargs):
         env = self.env.copy()
-        env.update(kwargs.pop('env') if 'env' in kwargs else {})
+        if 'env' in kwargs:
+            env.update(kwargs.pop('env'))
         kwargs['env'] = env
 
-        response = run_command(list(self), **kwargs)
+        response = run_command(tuple(self), **kwargs)
         return response
 
     def __str__(self):

@@ -27,7 +27,7 @@ class IOStream(Runnable):
 
     def __iter__(self):
         iterable = list(self.runnable)
-        if isinstance(iterable[0], list):
+        if isinstance(iterable[0], tuple):
             for item in iterable:
                 yield item
             return
@@ -37,7 +37,7 @@ class IOStream(Runnable):
         if 'data' not in kwargs and self.input_file is not None:
             kwargs['data'] = self.input_file.read()
 
-        response = run(list(self), *args, **kwargs)
+        response = run(tuple(self), *args, **kwargs)
         if self.output_file is not None:
             data = response.std_out
             self.output_file.write(data)
