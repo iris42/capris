@@ -17,6 +17,9 @@ class Response(object):
         self.std_err = ''
         self.std_out = ''
 
+    def ok(self):
+        return self.status_code == 0
+
     def __repr__(self):
         if self.command:
             return '<Response [%s]>' % (self.command[0])

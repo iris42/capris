@@ -1,7 +1,7 @@
 from collections import deque
 from capris.core import run_command
 from capris.runnable import Runnable
-from capris.utils import option_string, which
+from capris.utils import option_iterable, which
 
 __all__ = ['Command']
 
@@ -26,7 +26,7 @@ class Command(Runnable):
 
         yield self.command
         if self.positional or self.options:
-            for item in option_string(self.positional, self.options):
+            for item in option_iterable(self.positional, self.options):
                 yield item
 
     def run(self, **kwargs):
@@ -41,7 +41,7 @@ class Command(Runnable):
     def __str__(self):
         stack = [self.command]
         if self.positional or self.options:
-            stack.extend(option_string(self.positional, self.options))
+            stack.extend(option_iterable(self.positional, self.options))
 
         if self.base_command is not None:
             newstack = [str(self.base_command)]
