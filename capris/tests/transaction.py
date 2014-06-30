@@ -62,3 +62,19 @@ class TransactionTest(CaprisTest):
         assert transaction.defined
         # cat doesn't add a newline
         assert setup(run=True)[0].std_out == 'pattern'
+
+    def test_exception(self):
+        """
+        Assert that the transaction object should
+        throw a RuntimeError if a command exits
+        with a nonzero status code.
+        """
+        @transactional
+        def setup(transaction):
+            grep = transaction.grep
+            grep('pattern').run(data="")
+            return transaction
+
+        transaction = setup()
+        self.assertRaises(RuntimeError, transaction.execute)
+
