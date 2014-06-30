@@ -1,75 +1,90 @@
 # Transactions
 
-Transactions represent a series of commands that can be
-ran in sequence, and will be executed as far as one
-runnable doesn't fail, sort of like a `Makefile`. For
-example:
+Transactions represent blocks of commands that should be
+ran in sequence to one another and will continue to be
+ran if and only there are no failures. For example:
 
 ```python
-from capris.transaction import Transaction
-transaction = Transaction()
+from capris.transaction import transactional
 
-with transaction:
-    git = transaction.git
-    grep = transaction.grep
-    if condition:
-        transaction.abort()
+@transactional
+def setup(transaction):
+    make = transaction.make
+    make.run()
+    make.install.run()
+    return transaction
 
-    pipe = git.log(graph=None) | grep('commit *', o=None)
-    pipe.run()
-
-    transaction.execute()
-    assert transaction.results[0].status_code == 0
+transaction = setup()
+results = transaction.execute()
 ```
 
-When you abort a transaction, the block will still continue
-execution but commands added either previously or in the
-future will not be executed and the transaction history
-will be cleared.
+The above example is what the `&&` operator does in the
+POSIX shells, that is that it will execute the next
+command if the previous is succesful. All commands gained
+from the `transaction` object passed as the first parameter
+that are `run`-ed in the transactional method will not be
+ran until the `Transaction.execute` method is called.
+Methods defined on the transaction object:
 
- - `Transaction.lock`
- - `Transaction.abort`
- - `Transaction.execute`
- - `Transaction.history`
+ - `Transaction.command(string)`
+ - `Transaction.execute()`
+ - `Transaction.commands`
+ - `Transaction.defined`
 
-### `Transaction.lock`
 
-A boolean dictating if the transaction should allow any more
-commands added to itself. It will be set when the `transaction.abort`
-method is called, and cleared at block entry.
+## `Transaction.command(string)`
 
-### `Transaction.abort()`
-
-Aborts a transaction and all commands defined earlier or in
-the future will not take action. Should be used in situations
-where for example you want to run a series of commands if all
-conditions are met.
-
-### `Transaction.execute()`
-
-Executes the transaction. The `execute` method will only run
-sequential commands as long as the previous command succeeds,
-and you must call it to execute your commands within the `with`
-block. Returns a list of responses.
+An alias would be to use the `getattr` magic, but you
+can just do a regular python call if you need dynamism
+and that's your thing. Returns a lazy `TransactionCommand`
+object that will not run when the `run` method is called.
+Example usage:
 
 ```python
-for item in self.history:
-    response = item.run()
-    results.append(response)
-    if response.status_code != 0:
-        raise RuntimeError
+transaction.command('make')
+transaction.make
 ```
 
-### `Transaction.history`
+## `Transaction.execute()`
 
-A list of commands or runnables, a runner method, and positional and
-keyword arguments in an internal format that should all be executed
-when the `execute` method is called. If you need to iterate through
-all the commands you should do:
+Executes the transaction and runs all of the commands in
+the behaviour specified in the beginning of this document.
+Returns a list of `capris.core.Response` objects returned
+by calling the correct (i.e. `pipes -> Pipe.run`, etc)
+runner method on the object. For example:
 
 ```python
-for command, _,_,_ in transaction.history:
-    # do something
+results = transaction.execute()
+for response in results:
+    # ...
 ```
 
-It will be cleared on block exit and entry.
+## `Transaction.commands`
+
+A list of commands registered on the transaction object.
+You shouldn't manipulate this directly as the data stored
+in the list may change in format without prior notice.
+The current format is:
+
+```python
+(runnable, runner_method, args, kwargs)
+```
+
+Essentially when you call the `run` method of runnables
+returned by the `transaction.command` method, you are
+registering a command to be ran on the transaction
+object.
+
+## `Transaction.defined`
+
+A property that determines if a transaction is defined,
+or whether there are commands registered (their `run`
+method is called) on the transaction. For example:
+
+```python
+@transactional
+def setup(transaction):
+    if not transaction.defined:
+        # continue defining
+    return transaction
+```
