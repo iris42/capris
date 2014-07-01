@@ -12,7 +12,7 @@ class Transaction(object):
 
     @property
     def defined(self):
-        return bool(self.commands)
+        return len(self.commands) != 0
 
     def __getattr__(self, attr):
         values = self.__dict__
@@ -28,7 +28,7 @@ class Transaction(object):
             response = runner(command, *args, **kwargs)
             results.append(response)
             if not response.ok():
-                message = "command %s exited with %s" % (repr(command), response.status_code)
+                message = "cannot continue: command %s exited with %s" % (repr(command), response.status_code)
                 raise RuntimeError(message)
         return results
 
