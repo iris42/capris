@@ -32,11 +32,13 @@ class Transaction(object):
                 raise RuntimeError(message)
         return results
 
-def transactional(fn, lazy=False):
-    transaction = Transaction()
-    @wraps(fn)
-    def wrapper(*args, **kwargs):
-        if lazy and transaction.defined:
-            return transaction
-        return fn(transaction, *args, **kwargs)
-    return wrapper
+def transactional(lazy=False):
+    def callback(fn):
+        transaction = Transaction()
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            if lazy and transaction.defined:
+                return transaction
+            return fn(transaction, *args, **kwargs)
+        return wrapper
+    return callback

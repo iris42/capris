@@ -11,7 +11,7 @@ class TransactionTest(CaprisTest):
         commands are ran. Also assert that the commands
         are not ran when `[command].run` is called.
         """
-        @transactional
+        @transactional()
         def setup(transaction):
             grep = transaction.grep
             assert not grep.run()
@@ -27,7 +27,7 @@ class TransactionTest(CaprisTest):
         pipe objects properly and have lazy running
         behaviour.
         """
-        @transactional
+        @transactional()
         def setup(transaction, run=False):
             grep = transaction.grep
             echo = transaction.echo
@@ -48,7 +48,7 @@ class TransactionTest(CaprisTest):
         iostream objects and encapsulate them properly
         with subclasses, and run later on.
         """
-        @transactional
+        @transactional()
         def setup(transaction, run=False):
             cat = transaction.cat
             iostream = self.helpers.stringio('pattern') > cat.iostream
@@ -69,7 +69,7 @@ class TransactionTest(CaprisTest):
         throw a RuntimeError if a command exits
         with a nonzero status code.
         """
-        @transactional
+        @transactional()
         def setup(transaction):
             grep = transaction.grep
             grep('pattern').run(data="")
@@ -78,3 +78,19 @@ class TransactionTest(CaprisTest):
         transaction = setup()
         self.assertRaises(RuntimeError, transaction.execute)
 
+    def test_lazy_option(self):
+        """
+        Assert that the transactional function will
+        not be executed twice if the transaction is
+        already defined.
+        """
+        @transactional(lazy=True)
+        def setup(transaction):
+            assert not transaction.defined
+
+            transaction.grep().run()
+            return transaction
+
+        tr1, tr2 = setup(), setup()
+        assert tr1 is tr2
+        assert tr1.defined
