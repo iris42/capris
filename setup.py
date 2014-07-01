@@ -17,6 +17,7 @@ setup(
     license='MIT',
     zip_safe=False,
 
+    keywords=['capris','command','wrapper','dsl'],
     classifiers=(
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
