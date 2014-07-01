@@ -2,4 +2,4 @@ from capris.command import Command
 from capris.pipe import Pipe
 
 __all__ = ['Command','Pipe']
-VERSION = '0.0.64'
+__version__ = '0.0.65'

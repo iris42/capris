@@ -1,5 +1,7 @@
 import os
 
+__all__ = ['which', 'escape', 'option_iterable']
+
 def which(executable):
     if os.path.exists(executable):
         return os.path.abspath(executable)

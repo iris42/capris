@@ -2,6 +2,8 @@ import os
 from threading import Thread
 from subprocess import Popen, PIPE
 
+__all__ = ['Response', 'run', 'run_command']
+
 
 class Response(object):
     def __init__(self, process=None):
