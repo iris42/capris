@@ -1,7 +1,6 @@
 import os
-import subprocess
-import threading
-import shlex
+from threading import Thread
+from subprocess import Popen, PIPE
 
 
 class Response(object):
@@ -44,17 +43,15 @@ def run_command(command, env=None, data=None, timeout=None, cwd=None):
 
     def callback():
         try:
-            process = subprocess.Popen(
-                    args=command,
-                    env=env,
-                    universal_newlines=True,
-                    shell=False,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    stdin=subprocess.PIPE,
-                    bufsize=0,
-                    cwd=cwd
-                    )
+            process = Popen(args=command,
+                            env=env,
+                            universal_newlines=True,
+                            shell=False,
+                            stdout=PIPE,
+                            stderr=PIPE,
+                            stdin=PIPE,
+                            bufsize=0,
+                            cwd=cwd)
             response.process = process
             response.std_out, response.std_err = process.communicate(data)
             response.status_code = process.wait()
@@ -62,7 +59,7 @@ def run_command(command, env=None, data=None, timeout=None, cwd=None):
             response.exception = err
 
     if timeout is not None:
-        thread = threading.Thread(target=callback)
+        thread = Thread(target=callback)
         thread.start()
 
         thread.join(timeout)
