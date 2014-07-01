@@ -18,12 +18,47 @@ transaction = setup()
 results = transaction.execute()
 ```
 
-The above example is what the `&&` operator does in the
-POSIX shells, that is that it will execute the next
-command if the previous is succesful. All commands gained
-from the `transaction` object passed as the first parameter
-that are `run`-ed in the transactional method will not be
-ran until the `Transaction.execute` method is called.
+All commands gained from the `transaction` object passed
+as the first parameter that are `run`-ed in the decorated
+function will not be ran until the `Transaction.execute`
+method is called.
+
+### `@capris.transaction.transactional(lazy=False)`
+
+A decorator that accepts a single argument, the `lazy`
+option and returns a function that will call the decorated
+function with a `Transaction` object as the first parameter,
+for example:
+
+```python
+@transactional()
+def setup(transaction):
+    print(transaction)
+
+setup()
+# <capris.transaction.Transaction object at 0x...>
+```
+
+If you set the `lazy` option to `True`, the function
+will only be ran if the `defined` property of the
+`Transaction` object evaluates to `False`. For
+example:
+
+```python
+context = []
+
+@transactional(lazy=True)
+def setup(transaction):
+    context.append(transaction)
+    transaction.grep.run()
+
+[setup() for _ in range(2)]
+assert len(context) == 1
+```
+
+
+## `capris.transaction.Transaction`
+
 Methods defined on the transaction object:
 
  - `Transaction.command(string)`
@@ -32,7 +67,7 @@ Methods defined on the transaction object:
  - `Transaction.defined`
 
 
-## `Transaction.command(string)`
+### `Transaction.command(string)`
 
 An alias would be to use the `getattr` magic, but you
 can just do a regular python call if you need dynamism
@@ -45,7 +80,7 @@ transaction.command('make')
 transaction.make
 ```
 
-## `Transaction.execute()`
+### `Transaction.execute()`
 
 Executes the transaction and runs all of the commands in
 the behaviour specified in the beginning of this document.
@@ -59,7 +94,7 @@ for response in results:
     # ...
 ```
 
-## `Transaction.commands`
+### `Transaction.commands`
 
 A list of commands registered on the transaction object.
 You shouldn't manipulate this directly as the data stored
@@ -75,7 +110,7 @@ returned by the `transaction.command` method, you are
 registering a command to be ran on the transaction
 object.
 
-## `Transaction.defined`
+### `Transaction.defined`
 
 A property that determines if a transaction is defined,
 or whether there are commands registered (their `run`
