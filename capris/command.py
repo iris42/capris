@@ -44,20 +44,17 @@ class Command(Runnable):
             stack.extend(option_iterable(self.positional, self.options))
 
         if self.base_command is not None:
-            newstack = [str(self.base_command)]
-            for item in stack:
-                newstack.append(item)
-            stack = newstack
+            stack.insert(0, str(self.base_command))
 
         return ' '.join(stack)
 
     def __getattr__(self, attribute):
         values = self.__dict__
-        if attribute not in values:
-            attribute = attribute.replace('_', '-')
-            return self.subcommand(attribute)
+        if attribute in values:
+            return values[attribute]
 
-        return values[attribute]
+        attribute = attribute.replace('_', '-')
+        return self.subcommand(attribute)
 
     def copy(self):
         copy = self.__class__(self.command, *self.positional, **self.options)
