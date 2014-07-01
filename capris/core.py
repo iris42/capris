@@ -26,9 +26,9 @@ class Response(object):
 
     def __iter__(self):
         iterable = self.std_out.split('\n')
-        length = len(iterable)
+        maxindex = len(iterable) - 1
         for index, item in enumerate(iterable):
-            if not item and index == (length-1):
+            if not item and index == maxindex:
                 break
             yield item
 
