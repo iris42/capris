@@ -7,7 +7,7 @@ ran if and only there are no failures. For example:
 ```python
 from capris.transaction import transactional
 
-@transactional
+@transactional()
 def setup(transaction):
     make = transaction.make
     make.run()
@@ -82,7 +82,7 @@ or whether there are commands registered (their `run`
 method is called) on the transaction. For example:
 
 ```python
-@transactional
+@transactional()
 def setup(transaction):
     if not transaction.defined:
         # continue defining
