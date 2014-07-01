@@ -61,13 +61,16 @@ def run_command(command, env=None, data=None, timeout=None, cwd=None):
         except Exception as err:
             response.exception = err
 
-    thread = threading.Thread(target=callback)
-    thread.start()
+    if timeout is not None:
+        thread = threading.Thread(target=callback)
+        thread.start()
 
-    thread.join(timeout)
-    if thread.is_alive():
-        response.process.terminate()
-        thread.join()
+        thread.join(timeout)
+        if thread.is_alive():
+            response.process.terminate()
+            thread.join()
+    else:
+        callback()
     return response
 
 def run(commands, **kwargs):
