@@ -78,7 +78,7 @@ def run(commands, **kwargs):
     data = kwargs.pop('data') if 'data' in kwargs else None
 
     for command in commands:
-        if len(history):
+        if len(history) != 0:
             data = history[-1].std_out[0:10*1024]
 
         response = run_command(command, data=data, **kwargs)
