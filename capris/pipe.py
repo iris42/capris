@@ -13,8 +13,8 @@ class Pipe(Runnable):
             stack.append(str(item))
         return ' | '.join(stack)
 
-    def run(self, **kwargs):
-        return run(tuple(self), **kwargs)
+    def run(self, *args, **kwargs):
+        return run(tuple(self), *args, **kwargs)
 
     def __iter__(self):
         for item in self.commands:

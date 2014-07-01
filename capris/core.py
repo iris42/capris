@@ -45,18 +45,18 @@ def run_command(command, env=None, data=None, timeout=None, cwd=None):
 
     def callback():
         try:
-            process = Popen(args=command,
-                            env=env,
-                            universal_newlines=True,
-                            shell=False,
-                            stdout=PIPE,
-                            stderr=PIPE,
-                            stdin=PIPE,
-                            bufsize=0,
-                            cwd=cwd)
-            response.process = process
-            response.std_out, response.std_err = process.communicate(data)
-            response.status_code = process.wait()
+            proc = Popen(args=command,
+                         env=env,
+                         universal_newlines=True,
+                         shell=False,
+                         stdout=PIPE,
+                         stderr=PIPE,
+                         stdin=PIPE,
+                         bufsize=0,
+                         cwd=cwd)
+            response.process = proc
+            response.std_out, response.std_err = proc.communicate(data)
+            response.status_code = proc.wait()
         except Exception as err:
             response.exception = err
 

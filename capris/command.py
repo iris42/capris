@@ -1,4 +1,3 @@
-from collections import deque
 from capris.core import run_command
 from capris.runnable import Runnable
 from capris.utils import option_iterable, which
@@ -14,9 +13,9 @@ class Command(Runnable):
         self.env = {}
 
     @property
-    def absolute(self):
+    def absolute(self, path=None):
         copy = self.copy()
-        copy.command = which(self.command)
+        copy.command = which(self.command, path)
         return copy
 
     def __iter__(self):
