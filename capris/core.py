@@ -33,10 +33,16 @@ class Response(object):
                 break
             yield item
 
-def popen_callback(command, response, env, data, timeout, cwd):
+def run_command(command, env=None, data=None, timeout=None, cwd=None):
+    environment = dict(os.environ)
+    if env:
+        environment.update(env)
+
+    response = Response()
     response.command = command
-    response.env = env
-    def closure():
+    response.env = environment
+
+    def callback():
         try:
             process = subprocess.Popen(
                     args=command,
@@ -51,17 +57,11 @@ def popen_callback(command, response, env, data, timeout, cwd):
                     )
             response.process = process
             response.std_out, response.std_err = process.communicate(data)
-            response.status_code = process.returncode
+            response.status_code = process.wait()
         except Exception as err:
             response.exception = err
-    return closure
 
-def run_command(command, env={}, data=None, timeout=None, cwd=None):
-    environment = dict(os.environ)
-    environment.update(env)
-
-    response = Response()
-    thread = threading.Thread(target=popen_callback(command, response, environment, data, timeout, cwd))
+    thread = threading.Thread(target=callback)
     thread.start()
 
     thread.join(timeout)
