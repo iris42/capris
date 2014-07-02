@@ -38,14 +38,7 @@ class Command(Runnable):
         return response
 
     def __str__(self):
-        stack = [self.command]
-        if self.positional or self.options:
-            stack.extend(option_iterable(self.positional, self.options))
-
-        if self.base_command is not None:
-            stack.insert(0, str(self.base_command))
-
-        return ' '.join(stack)
+        return ' '.join(self)
 
     def __getattr__(self, attribute):
         values = self.__dict__
