@@ -1,20 +1,18 @@
-import os
+from os import getenv, X_OK, access, pathsep
+from os.path import join, abspath, exists
 
 __all__ = ['which', 'escape', 'option_iterable']
 
 
 def which(executable, path):
-    if path:
-        executable = os.path.join(path, executable)
+    if exists(executable):
+        return abspath(executable)
 
-    if os.path.exists(executable):
-        return os.path.abspath(executable)
+    path = getenv('PATH') if path is None else path
 
-    path = os.getenv('PATH') if path is None else path
-
-    for directory in path.split(os.pathsep):
-        fpath = os.path.join(directory, executable)
-        if os.path.exists(fpath) and os.access(fpath, os.X_OK):
+    for directory in path.split(pathsep):
+        fpath = join(directory, executable)
+        if exists(fpath) and access(fpath, X_OK):
             return fpath
     raise RuntimeError('executable %s is not found' % (executable))
 
