@@ -78,7 +78,7 @@ def run(commands, **kwargs):
 
     for command in commands:
         if len(history):
-            data = history[-1].std_out[0:10*1024]
+            data = history[-1].std_out[0:10240]
 
         response = run_command(command, data=data, **kwargs)
         history.append(response)
