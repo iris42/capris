@@ -1,14 +1,12 @@
 __all__ = ['Runnable']
 
+
 class Runnable(object):
     def run(self):
         raise NotImplementedError
 
     def __repr__(self):
-        return '<{name} [{string}]>'.format(
-                name=self.__class__.__name__,
-                string=str(self)
-                )
+        return '<%s [%s]>' % (self.__class__.__name__, str(self))
 
     def __or__(self, other):
         if isinstance(other, Pipe):

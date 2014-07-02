@@ -2,6 +2,7 @@ from capris.pipe import Pipe
 from capris.command import Command
 from capris.tests import CaprisTest
 
+
 class PipeTest(CaprisTest):
     def test_pipe(self):
         """

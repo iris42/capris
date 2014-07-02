@@ -5,6 +5,7 @@ from capris.pipe import Pipe
 
 __all__ = ['TransactionPipe', 'TransactionIOStream', 'TransactionCommand']
 
+
 class TransactionRunnable(Runnable):
     def __or__(self, other):
         if isinstance(other, Pipe):
@@ -31,8 +32,13 @@ class TransactionRunnable(Runnable):
             ))
 
 
-class TransactionPipe(TransactionRunnable, Pipe): pass
-class TransactionIOStream(TransactionRunnable, IOStream): pass
+class TransactionPipe(TransactionRunnable, Pipe):
+    pass
+
+
+class TransactionIOStream(TransactionRunnable, IOStream):
+    pass
+
 
 class TransactionCommand(TransactionRunnable, Command):
     def copy(self):

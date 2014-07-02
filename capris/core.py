@@ -34,6 +34,7 @@ class Response(object):
                 break
             yield item
 
+
 def run_command(command, env=None, data=None, timeout=None, cwd=None):
     environment = dict(environ)
     if env:
@@ -71,6 +72,7 @@ def run_command(command, env=None, data=None, timeout=None, cwd=None):
     else:
         callback()
     return response
+
 
 def run(commands, **kwargs):
     history = []

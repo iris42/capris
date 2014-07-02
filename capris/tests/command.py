@@ -10,8 +10,8 @@ class CommandTest(CaprisTest):
         the command is ran.
         """
         grep = self.grep()
-        grep.env = {'KEY':'hey!', 'HEY':'true'}
-        response = grep.run(env={"KEY":"yo!"})
+        grep.env = {'KEY': 'hey!', 'HEY': 'true'}
+        response = grep.run(env={"KEY": "yo!"})
 
         # Command.env should be updated
         assert response.env['KEY'] == 'yo!'
@@ -54,10 +54,12 @@ class CommandTest(CaprisTest):
         properly.
         """
         command = self.grep(option="string", boolean=False, other=True)
-        assert set(str(command).split()) == {'grep', "--option=string", "--boolean=false", "--other=true"}
+        assert set(str(command).split()) == \
+            {'grep', "--option=string", "--boolean=false", "--other=true"}
 
         command = self.grep('pattern', n=1, o=None)
-        assert set(str(command).split()) == {"grep", "-n", "1", "pattern", "-o"}
+        assert set(str(command).split()) == \
+            {"grep", "-n", "1", "pattern", "-o"}
 
         command = self.grep('"Hello"')
         assert str(command) == 'grep "Hello"'

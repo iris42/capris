@@ -8,7 +8,8 @@ class IOStreamTest(CaprisTest):
         from and written to when the runnable is being
         ran.
         """
-        stream = self.helpers.stringio('pattern\n') > self.grep('pattern').iostream
+        stream = self.grep('pattern').iostream
+        self.helpers.stringio('pattern\n') > stream
         stream > self.helpers.stringio()
 
         response = stream.run()
@@ -25,6 +26,7 @@ class IOStreamTest(CaprisTest):
         available.
         """
         context = []
+
         def callback(response):
             # cat always returns 0...
             self.helpers.assert_ok(response)
@@ -37,7 +39,9 @@ class IOStreamTest(CaprisTest):
             assert response.std_out == ''
             context.append(response)
 
-        stream = self.helpers.stringio('pattern\n') > (self.grep('pattern') | self.cat).iostream & callback
+        stream = self.helpers.stringio('pattern\n') > \
+            (self.grep('pattern') | self.cat).iostream & \
+            callback
         response = stream.run(data='not even\n')
 
         assert context

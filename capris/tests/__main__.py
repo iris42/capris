@@ -2,6 +2,7 @@ import sys
 import unittest
 import capris.tests
 
+
 def main():
     suite = unittest.TestSuite()
     runner = unittest.TextTestRunner()

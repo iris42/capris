@@ -1,6 +1,7 @@
 from capris.tests import CaprisTest
 from capris.transaction import transactional
 
+
 class TransactionTest(CaprisTest):
     def test_basic(self):
         """

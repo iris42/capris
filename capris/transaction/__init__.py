@@ -1,6 +1,7 @@
 from functools import wraps
 from capris.transaction.wrappers import TransactionCommand
 
+
 class Transaction(object):
     def __init__(self):
         self.commands = []
@@ -19,7 +20,7 @@ class Transaction(object):
         if attr in values:
             return values[attr]
 
-        attr = attr.replace('_','-')
+        attr = attr.replace('_', '-')
         return self.command(attr)
 
     def execute(self):
@@ -28,14 +29,16 @@ class Transaction(object):
             response = runner(command, *args, **kwargs)
             results.append(response)
             if not response.ok():
-                message = "cannot continue: command %s exited with %s"\
-                            % (repr(command), response.status_code)
+                message = ("cannot continue: command %s exited with %s"
+                           % (repr(command), response.status_code))
                 raise RuntimeError(message)
         return results
+
 
 def transactional(lazy=False):
     def callback(fn):
         transaction = Transaction()
+
         @wraps(fn)
         def wrapper(*args, **kwargs):
             if lazy and transaction.defined:
