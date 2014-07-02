@@ -9,9 +9,6 @@ class Runnable(object):
         return '<%s [%s]>' % (self.__class__.__name__, str(self))
 
     def __or__(self, other):
-        if isinstance(other, Pipe):
-            other.append(self)
-            return other
         return Pipe(self, other)
 
     @property

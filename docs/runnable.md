@@ -43,12 +43,17 @@ echo('pattern') | grep('pattern')
 Pipe(echo('pattern'), grep('pattern'))
 ```
 
-But the `|` operator will mutate the previous
-`Pipe` object if you pipe a `Pipe` object and
-a runnable, so it's recommended that you only
-use the `|` operator when you do not need fine
-grained control as the `|` operator is designed
-to reduce the number of objects created.
+Starting from Capris 0.0.72 the `|` operator
+is guaranteed to not mutate `Pipe` objects.
+To mutate them you can use the `+=` operator
+of pipe objects or the `append` method, for
+example:
+
+```python
+pipe = Pipe(command)
+pipe += other_1
+pipe.append(other_2)
+```
 
 The `iostream` property returns an `IOStream`
 object for the runnable that you can hook callbacks
@@ -62,7 +67,8 @@ $ cat file.txt > echo
 We can do either of the following, which are both
 equivalent but the `iostream` variant reduces
 the overhead because one less process needs to
-be spawned.
+be spawned. Note that the second variant will
+mutate the `iostream` instance.
 
 ```python
 cat('file.txt') | echo
@@ -70,10 +76,13 @@ open('file.txt') > echo.iostream
 ```
 
 To redirect the output to another file-like object
-we need to use the `>` operator, for example:
+we need to use the `>` operator. It will mutate the
+`iostream` instance:
 
 ```python
-echo('something').iostream > open('res.txt', 'w')
+with open('res.txt', 'w') as fp:
+    echo('something').iostream > fp
+    assert iostream.output_file is fp
 ```
 
 To assign callbacks that could be ran after the
@@ -87,4 +96,14 @@ def callback(response):
     assert response.std_out == 'pattern\n'
 
 echo('something').iostream & callback
+```
+
+Like all the operators overloaded for `iostream`
+instances it will mutate the original instance.
+You can hook as many callbacks as you like with
+the `register` function, for example:
+
+```python
+iostream = echo('something').iostream
+iostream.register(cb1, cb2, cb3)
 ```

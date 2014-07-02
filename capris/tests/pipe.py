@@ -27,4 +27,13 @@ class PipeTest(CaprisTest):
 
         new_pipe = pipe | self.grep
         assert str(new_pipe) == 'cat | grep | grep'
+
+    def test_immutable_or(self):
+        """
+        Pipes piped to other commands with the ``|`` operator
+        should create a new pipe instead of mutating the current
+        pipe so that it is easier to compose commands.
+        """
+        pipe = Pipe(self.cat, self.grep)
+        new_pipe = pipe | self.grep
         assert new_pipe is not pipe

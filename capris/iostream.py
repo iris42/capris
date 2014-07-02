@@ -34,6 +34,10 @@ class IOStream(Runnable):
             return
         yield iterable
 
+    def register(self, *callbacks):
+        for item in callbacks:
+            self.callbacks.append(item)
+
     def run(self, *args, **kwargs):
         if 'data' not in kwargs and self.input_file is not None:
             kwargs['data'] = self.input_file.read()
