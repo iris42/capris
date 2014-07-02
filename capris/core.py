@@ -1,4 +1,4 @@
-import os
+from os import environ
 from threading import Thread
 from subprocess import Popen, PIPE
 
@@ -35,7 +35,7 @@ class Response(object):
             yield item
 
 def run_command(command, env=None, data=None, timeout=None, cwd=None):
-    environment = dict(os.environ)
+    environment = dict(environ)
     if env:
         environment.update(env)
 
@@ -77,7 +77,7 @@ def run(commands, **kwargs):
     data = kwargs.pop('data') if 'data' in kwargs else None
 
     for command in commands:
-        if len(history) != 0:
+        if len(history):
             data = history[-1].std_out[0:10*1024]
 
         response = run_command(command, data=data, **kwargs)
