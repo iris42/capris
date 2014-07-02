@@ -42,3 +42,49 @@ For example, the following do the same things:
 echo('pattern') | grep('pattern')
 Pipe(echo('pattern'), grep('pattern'))
 ```
+
+But the `|` operator will mutate the previous
+`Pipe` object if you pipe a `Pipe` object and
+a runnable, so it's recommended that you only
+use the `|` operator when you do not need fine
+grained control as the `|` operator is designed
+to reduce the number of objects created.
+
+The `iostream` property returns an `IOStream`
+object for the runnable that you can hook callbacks
+or redirect files to, for example to do the
+following in `capris`:
+
+```bash
+$ cat file.txt > echo
+```
+
+We can do either of the following, which are both
+equivalent but the `iostream` variant reduces
+the overhead because one less process needs to
+be spawned.
+
+```python
+cat('file.txt') | echo
+open('file.txt') > echo.iostream
+```
+
+To redirect the output to another file-like object
+we need to use the `>` operator, for example:
+
+```python
+echo('something').iostream > open('res.txt', 'w')
+```
+
+To assign callbacks that could be ran after the
+command has completed execution succesfully (without
+raising any exceptions), we can use the `&` operator,
+for example for testing purposes:
+
+```python
+def callback(response):
+    assert response.ok()
+    assert response.std_out == 'pattern\n'
+
+echo('something').iostream & callback
+```
