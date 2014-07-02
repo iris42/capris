@@ -1,61 +1,44 @@
-## `capris.Runnable`
+# Runnables
 
-The `Runnable` class represents a `run`-able object, or
-an object that supports the `run` API. All `Pipe`s, `Command`s,
-and `IOContext`s are subclasses of the `Runnable` class,
-and have a `run` method.
-
- - `Runnable.run`
- - `Runnable.iostream`
- - `Runnable.__or__`
-
-### `Runnable.run(*args, **kwargs)`
-
-Exceutes the runnable object regardless if it's a `Pipe`
-or `Command` or `IOContext` and returns a response depending
-on whether it is a transaction-based command. For example:
+Runnables are basically objects in the `capris` API
+which have a `run` method. The base class `Runnable`
+doesn't implement the method by raising a `NotImplementedError`
+but all subclasses are expected to implement the
+`run` method, as well as the `iter` and `str` magic
+methods. For example:
 
 ```python
->>> git.log(graph=None).run()
-<Response [git]>
+class SimpleCommand(Runnable):
+    def __init__(self, command):
+        self.command = command
+
+    def __iter__(self):
+        yield self.command
+
+    def __str__(self):
+        return str(self.command)
+
+    def run(self):
+        return os.system(self.command)
 ```
 
-Any keyword or positional arguments passed will be passed to
-the `envoy.run` function.
+Runnables come in three flavours in the `capris`
+API- commands, pipes, and iostreams. There are
+some operator overloaded properties for them:
 
-### `Runnable.iostream`
+ - `|` operator
+ - `iostream` property
+    - `>` operator
+    - `<` operator
+    - `&` operator
 
-A property that returns a `IOStream` instance that can
-redirect output/input to the given runnable. For example:
+Basically, to pipe the output of a runnable to
+another using the `capris` DSL, you can use the
+`|` operator, provided that the runnable's `run`
+method returns a `capris.core.Response` object.
+For example, the following do the same things:
 
 ```python
->>> iostream = git.log(n=20).iostream > open('file.txt', 'w')
->>> iostream.run()
+echo('pattern') | grep('pattern')
+Pipe(echo('pattern'), grep('pattern'))
 ```
-
-You can also assign callbacks to be ran after the command
-is ran, for example to test the response object:
-
-```python
->>> def callback(response):
-...     assert response.status_code == 0
-...     print("Got " + repr(response))
-...
->>> iostream = git.log(n=20).iostream & callback
->>> response = iostream.run()
-Got <Response [git]>
-```
-
-### `Runnable.__or__(other)`
-
-You can pipe `Runnable` objects by using the `|` operator,
-instead of building up the pipe object manually. For
-example:
-
-```python
->>> git.log(graph=None) | grep('pattern') | wc
-<Pipe [git log --graph | grep 'pattern' | wc]>
-```
-
-The `__or__` magic method is smart and will not build up more
-than one `Pipe` object if it is used properly, by type checking.
