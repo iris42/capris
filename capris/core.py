@@ -84,7 +84,7 @@ def run(commands, **kwargs):
 
         response = run_command(command, data=data, **kwargs)
         history.append(response)
-        if response.exception:
+        if response.exception is not None:
             raise response.exception
 
     res = history.pop()
