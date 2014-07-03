@@ -4,22 +4,28 @@ from capris.tests import CaprisTest
 class CommandTest(CaprisTest):
     def test_env(self):
         """
-        ``Command.env`` attribute should be copied
-        and updated by the ``data`` keyword argument
-        passed to the ``Command.run`` function when
-        the command is ran.
+        Command objects should have immutable ``env``
+        attributes and should not be affected by the
+        ``env`` keyword argument when calling the
+        ``run`` method of runnables.
         """
         grep = self.grep()
-        grep.env = {'KEY': 'hey!', 'HEY': 'true'}
-        response = grep.run(env={"KEY": "yo!"})
+        grep.env = {'X':'y', 'Z':'a'}
 
-        # Command.env should be updated
-        assert response.env['KEY'] == 'yo!'
-        assert response.env['HEY'] == 'true'
+        response = grep.run(env={'X':'z'})
+        assert response.env['X'] == 'z'
+        assert grep.env['X'] == 'y'
 
-        # Command.env should be provided
-        response = grep.run()
-        assert response.env['KEY'] == 'hey!'
+    def test_immutable(self):
+        """
+        Command objects should essentially be immutable
+        because they should be easily composable,
+        and provide a certain level of thread safety.
+        """
+        ls = self.ls
+
+        assert ls.subcommand is not ls.subcommand
+        assert ls() is not ls
 
     def test_absolute(self):
         """

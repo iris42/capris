@@ -29,12 +29,20 @@ class Command(Runnable):
             for item in option_iterable(self.positional, self.options):
                 yield item
 
+    def get_env(self, env=None):
+        if not self.env:
+            return {}
+
+        env = self.env.copy() if env is None else env
+        if self.base_command:
+            self.base_command.get_env(env)
+        return env
+
     def run(self, **kwargs):
-        env = self.env.copy()
+        env = self.get_env()
         if 'env' in kwargs:
             env.update(kwargs.pop('env'))
         kwargs['env'] = env
-
         response = run_command(tuple(self), **kwargs)
         return response
 
