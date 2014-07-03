@@ -33,11 +33,11 @@ class TransactionRunnable(Runnable):
 
 
 class TransactionPipe(TransactionRunnable, Pipe):
-    pass
+    history = None
 
 
 class TransactionIOStream(TransactionRunnable, IOStream):
-    pass
+    history = None
 
 
 class TransactionCommand(TransactionRunnable, Command):

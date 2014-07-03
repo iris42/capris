@@ -10,9 +10,9 @@ class CommandTest(CaprisTest):
         ``run`` method of runnables.
         """
         grep = self.grep()
-        grep.env = {'X':'y', 'Z':'a'}
+        grep.env = {'X': 'y', 'Z': 'a'}
 
-        response = grep.run(env={'X':'z'})
+        response = grep.run(env={'X': 'z'})
         assert response.env['X'] == 'z'
         assert grep.env['X'] == 'y'
 
