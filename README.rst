@@ -2,6 +2,10 @@
 Capris
 ======
 
+.. image:: https://landscape.io/github/eugene-eeo/capris/master/landscape.png
+   :target: https://landscape.io/github/eugene-eeo/capris/master
+      :alt: Code Health
+
 Capris is a MIT-licensed Python library built for writing
 composable apps that leverage the command line.
 
