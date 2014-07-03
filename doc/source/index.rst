@@ -28,18 +28,12 @@ that you know and love:
     >>> print response.std_out
     ...
 
-Contents:
+Contents
+========
 
 .. toctree::
     :maxdepth: 2
 
-    tutorial
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+    tutorial.rst
+    runnable.rst
+    transaction.rst
