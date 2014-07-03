@@ -7,6 +7,8 @@ __all__ = ['TransactionPipe', 'TransactionIOStream', 'TransactionCommand']
 
 
 class TransactionRunnable(Runnable):
+    history = None
+
     def __or__(self, other):
         if isinstance(other, Pipe):
             other.append(self)
@@ -33,11 +35,11 @@ class TransactionRunnable(Runnable):
 
 
 class TransactionPipe(TransactionRunnable, Pipe):
-    history = None
+    pass
 
 
 class TransactionIOStream(TransactionRunnable, IOStream):
-    history = None
+    pass
 
 
 class TransactionCommand(TransactionRunnable, Command):
