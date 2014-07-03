@@ -164,4 +164,29 @@ it to a string::
 
 This can be an alternative to using a file-like
 object like ``StringIO`` to store the string
-value.
+value. You can also specify a timeout for the
+command being ran and updates to the environment,
+for example::
+
+    >>> command.run(timeout=5)
+    >>> command.run(env={'OPTION':'value'})
+
+If you want to persist the updates to the environment
+variables the recommended way is to change the ``env``
+attribute, for example::
+
+    >>> command.env = {'OPTION':'value'}
+
+This will ensure that all subcommands will also run
+with the updates to the environment variables. Note
+that environment variables are not copied from base
+command to subcommand. Instead, lookups are made up
+the internal command hierarchy. For example, if you
+have the following command, you will get the tree
+following it::
+
+    git.log.subcommand
+    git
+     |-- log
+          |-- subcommand
+
