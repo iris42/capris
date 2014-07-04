@@ -1,5 +1,4 @@
 from cProfile import runctx
-from capris import Command, Pipe
 from capris.core import run, run_command
 
 PROFILED = []
