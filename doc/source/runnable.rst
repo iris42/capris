@@ -118,8 +118,14 @@ in the core module. Here is the full `function signature` for those commands:
     ``exception`` property of the response wasn't None, it will raise
     it and stop execution. The ``history`` attribute of the response
     will be set to the list of responses (excluding the last command).
-    It will automatically pipe the output of the last command to the
-    next.
+    It will automatically pipe the first 24KB of output of the last
+    command to the next.
+
+    The 24KB restriction is to avoid broken pipe problems that arise
+    when too much data is thrown into stdin. But most of the time
+    you shouldn't worry about this restriction- if you are running into
+    problems then it should be best practice to use streaming instead
+    of in memory solutions.
 
     :param commands: An iterable of iterables of commands.
     :param kwargs: Keyword arguments to be passed to the ``run_command``
