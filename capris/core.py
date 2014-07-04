@@ -37,10 +37,7 @@ class Response(object):
 
 
 def run_command(command, env=None, data=None, timeout=None, cwd=None):
-    environment = dict(environ)
-    if env:
-        environment.update(env)
-
+    environment = env if env is None else {}
     response = Response()
     response.command = command
     response.env = environment
@@ -84,9 +81,10 @@ def run(commands, **kwargs):
             data = history[-1].std_out[0:10240]
 
         response = run_command(command, data=data, **kwargs)
-        history.append(response)
         if response.exception is not None:
             raise response.exception
+
+        history.append(response)
 
     res = history.pop()
     res.history = history
