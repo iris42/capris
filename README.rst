@@ -60,3 +60,12 @@ To install Capris, simply:
 .. code-block:: bash
 
     $ pip install capris
+
+-------------
+Documentation
+-------------
+
+You can read the documentation at docs_.
+
+.. _docs: https://pythonhosted.org/capris/
+
