@@ -65,7 +65,4 @@ To install Capris, simply:
 Documentation
 -------------
 
-You can read the documentation at docs_.
-
-.. _docs: https://pythonhosted.org/capris/
-
+You can read the documentation at https://pythonhosted.org/capris/.
