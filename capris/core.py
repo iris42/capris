@@ -18,8 +18,9 @@ class Response(object):
         self.std_err = ''
         self.std_out = ''
 
-    def ok(self):
-        return self.status_code == 0
+    def ok(self, *allowed):
+        return (self.status_code == 0 or
+                self.status_code in allowed)
 
     def __repr__(self):
         if self.command:
