@@ -15,12 +15,12 @@ def profiled(fn):
 
 @profiled
 def profile_run_command():
-    response = run_command(['env'])
+    run_command(['env'])
 
 
 @profiled
 def profile_run():
-    response = run([['echo', 'pattern'], ['grep', 'pattern']])
+    run([['echo', 'pattern'], ['grep', 'pattern']])
 
 
 if __name__ == "__main__":
