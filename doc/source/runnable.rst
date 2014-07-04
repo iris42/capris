@@ -86,3 +86,73 @@ function, for example::
 
     iostream = echo('something').iostream
     iostream.register(cb1, cb2, cb3)
+
+
+The Run Method
+--------------
+
+All runnables (defined in the **Capris** API) have a ``run`` method that accepts
+keyword arguments to be passed to either the ``run`` or ``run_command`` functions
+in the core module. Here is the full `function signature` for those commands:
+
+.. method:: capris.core.run_command(args, env=None, data=None, timeout=None, cwd=None)
+
+    Runs the arguments using ``subprocess.Popen`` and creates and
+    returns a ``Response`` object. If timeout is not ``None``, a
+    new thread will be created to execute the callback in order
+    to be able to enforce the timeout. If an exception was raised
+    it will be stored in the ``response.exception`` attribute.
+
+    :param args: An iterable of arguments to be ran.
+    :param env:  A dictionary update to the current ``os.environ``.
+    :param data: Data to be passed to the stdin of the command.
+    :param timeout: Maximum execution time in seconds.
+    :param cwd:  The current working directory for the command.
+
+    :returns: A ``Response`` object.
+
+.. method:: capris.core.run(commands, **kwargs)
+
+    Runs all of the commands specified in `commands` argument using
+    ``run_command`` and then stores the result in a list. If the
+    ``exception`` property of the response wasn't None, it will raise
+    it and stop execution. The ``history`` attribute of the response
+    will be set to the list of responses (excluding the last command).
+    It will automatically pipe the output of the last command to the
+    next.
+
+    :param commands: An iterable of iterables of commands.
+    :param kwargs: Keyword arguments to be passed to the ``run_command``
+                   function for each command. All options are untouched
+                   except for ``data``.
+
+    :returns: A ``Response`` object.
+
+Subclassing
+-----------
+
+You can provide your own runnable that can be accepted into parts of the **Capris**
+API by subclassing the ``Runnable`` class. You must provide ``run``, ``__iter__``,
+and ``__str__`` methods. For example::
+
+    from capris.runnable import Runnable
+    from capris.core import run
+
+    class RunnableStack(Runnable):
+        def __init__(self, *runnables):
+            self.runnables = runnables
+
+        def __iter__(self):
+            for item in self.runnables:
+                yield item
+
+        def __str__(self):
+            return ' && '.join(self)
+
+        def run(self, **kwargs):
+            response = run(tuple(self), **kwargs)
+            return response
+
+If you do not provide the ``run`` method, it will raise ``NotImplementedError``
+whenever you run the runnable object, however that doesn't apply to other magic
+methods such as ``__str__`` and ``__iter__``.

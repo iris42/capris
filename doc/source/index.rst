@@ -36,4 +36,5 @@ Contents
 
     tutorial.rst
     runnable.rst
+    responses.rst
     transaction.rst
