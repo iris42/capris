@@ -37,7 +37,7 @@ class Response(object):
 
 
 def run_command(command, env=None, data=None, timeout=None, cwd=None):
-    environment = env if env is None else {}
+    environment = env if env is not None else {}
     response = Response()
     response.command = command
     response.env = environment
