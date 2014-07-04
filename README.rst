@@ -39,16 +39,16 @@ around with strings and escaping for you.
 Features
 --------
 
-- DSL for command generation
-- Support for nested subcommands
-- Smart option generation
-- Transactions and redirection
 - Built in support for pipes
-- Thread safety
-- Works with both Python 2 and 3
+- DSL for command generation
+- Elegant responses and environment variables
 - High-level unit tests for all classes
 - Safe- ``capris`` doesn't touch the shell
-- Elegant responses and environment
+- Smart option generation
+- Support for nested subcommands
+- Thread safety
+- Transactions and redirection
+- Works with both Python 2 and 3
 
 
 ------------
