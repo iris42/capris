@@ -28,11 +28,11 @@ a daily basis:
     >>> print response.std_out
     ...
 
-``capris`` allows you to write code that just calls commands
-and helps you focus on writing the `commands that you need`,
-not the code required to handle calling and getting responses
-from the commands. ``capris`` does all of the mucking around
-with strings and escaping for you.
+``capris`` allows you to write code or tests that just calls
+commands and helps you focus on writing the `commands that you
+need`, not the code required to handle calling and getting
+responses from the commands. ``capris`` does all of the mucking
+around with strings and escaping for you.
 
 
 --------
@@ -47,7 +47,8 @@ Features
 - Thread safety
 - Works with both Python 2 and 3
 - High-level unit tests for all classes
-- Safe- `capris` doesn't touch the shell
+- Safe- ``capris`` doesn't touch the shell
+- Elegant responses and environment
 
 
 ------------
