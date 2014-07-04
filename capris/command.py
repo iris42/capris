@@ -20,7 +20,7 @@ class Command(Runnable):
         return copy
 
     def __iter__(self):
-        if self.base_command is not None:
+        if self.base_command:
             for item in self.base_command:
                 yield item
 
@@ -29,17 +29,8 @@ class Command(Runnable):
             for item in option_iterable(self.positional, self.options):
                 yield item
 
-    def get_env(self, env=None):
-        if not self.env:
-            return {}
-
-        env = self.env.copy() if env is None else env
-        if self.base_command:
-            self.base_command.get_env(env)
-        return env
-
     def run(self, **kwargs):
-        env = self.get_env()
+        env = self.env.copy()
         if 'env' in kwargs:
             env.update(kwargs.pop('env'))
         kwargs['env'] = env
@@ -60,6 +51,7 @@ class Command(Runnable):
     def copy(self):
         copy = self.__class__(self.command, *self.positional, **self.options)
         copy.base_command = self.base_command
+        copy.env = self.env.copy()
         return copy
 
     def __call__(self, *args, **kwargs):
@@ -71,4 +63,5 @@ class Command(Runnable):
     def subcommand(self, command):
         subcommand = self.__class__(command)
         subcommand.base_command = self
+        subcommand.env = self.env.copy()
         return subcommand
