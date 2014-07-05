@@ -51,7 +51,8 @@ class Command(Runnable):
     def copy(self):
         copy = self.__class__(self.command, *self.positional, **self.options)
         copy.base_command = self.base_command
-        copy.env = self.env.copy()
+        if self.env:
+            copy.env = self.env.copy()
         return copy
 
     def __call__(self, *args, **kwargs):
@@ -63,5 +64,6 @@ class Command(Runnable):
     def subcommand(self, command):
         subcommand = self.__class__(command)
         subcommand.base_command = self
-        subcommand.env = self.env.copy()
+        if self.env:
+            subcommand.env = self.env.copy()
         return subcommand

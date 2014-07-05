@@ -7,7 +7,8 @@ class CommandTest(CaprisTest):
         Command objects should have immutable ``env``
         attributes and should not be affected by the
         ``env`` keyword argument when calling the
-        ``run`` method of runnables.
+        ``run`` method of runnables. Subcommands should
+        also have copies of the original environment.
         """
         grep = self.grep()
         grep.env = {'X': 'y', 'Z': 'a'}
@@ -15,6 +16,10 @@ class CommandTest(CaprisTest):
         response = grep.run(env={'X': 'z'})
         assert response.env['X'] == 'z'
         assert grep.env['X'] == 'y'
+
+        sub = grep.sub()
+        assert sub.env is not grep.env
+        assert sub.env == grep.env
 
     def test_immutable(self):
         """
