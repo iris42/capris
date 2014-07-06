@@ -1,5 +1,6 @@
-from capris.core import run
+from capris.core import run, run_command
 from capris.runnable import Runnable
+from capris.pipe import Pipe
 
 __all__ = ['IOStream']
 
@@ -11,42 +12,41 @@ class IOStream(Runnable):
         self.output_file = None
         self.callbacks = []
 
-    def __str__(self):
-        return str(self.runnable)
-
-    def __and__(self, callback):
+    def register(self, callback):
         self.callbacks.append(callback)
+
+    def __lt__(self, fp):
+        self.input_file = fp
         return self
 
-    def __gt__(self, handle):
-        self.output_file = handle
+    def __gt__(self, fp):
+        self.output_file = fp
         return self
 
-    def __lt__(self, handle):
-        self.input_file = handle
+    def __and__(self, method):
+        self.register(method)
         return self
 
-    def __iter__(self):
-        iterable = tuple(self.runnable)
-        if isinstance(iterable[0], tuple):
-            for item in iterable:
-                yield item
-            return
-        yield iterable
-
-    def register(self, *callbacks):
-        for item in callbacks:
+    def register(self, *methods):
+        for item in methods:
             self.callbacks.append(item)
 
-    def run(self, *args, **kwargs):
+    def __iter__(self):
+        for item in self.runnable:
+            yield item
+
+    def run(self, **kwargs):
         if 'data' not in kwargs and self.input_file:
             kwargs['data'] = self.input_file.read()
 
-        response = run(tuple(self), *args, **kwargs)
-        if self.output_file is not None:
-            data = response.std_out
-            self.output_file.write(data)
+        method = run_command
+        if isinstance(self.runnable, Pipe):
+            method = run
 
-        for callback in self.callbacks:
-            callback(response)
+        response = method(tuple(self), **kwargs)
+        if self.output_file:
+            self.output_file.write(response.std_out)
+
+        for item in self.callbacks:
+            item(response)
         return response

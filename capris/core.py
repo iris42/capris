@@ -72,7 +72,10 @@ def run(commands, **kwargs):
     data = kwargs.pop('data', None)
     stream = None
 
-    # see reverse spawning recipe
+    # reverse spawning recipe:
+    #   cat = Popen(['cat'], stdin=PIPE, stdout=PIPE)
+    #   grep = Popen(['grep', '.'], stdin=PIPE, stdout=cat.stdin)
+    #
     for command in reversed(commands):
         response = run_command(command,
                                stream=stream,
