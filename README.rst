@@ -49,6 +49,7 @@ Features
 - Thread safety
 - Transactions and redirection
 - Works with both Python 2 and 3
+- Fast stream based pipelining
 
 
 ------------
