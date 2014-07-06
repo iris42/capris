@@ -23,7 +23,7 @@ class Response(object):
 
     def __repr__(self):
         if self.command:
-           return '<Response [%s]>' % (self.command[0])
+            return '<Response [%s]>' % (self.command[0])
         return '<Response>'
 
     def __iter__(self):
