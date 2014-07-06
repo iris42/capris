@@ -12,9 +12,6 @@ class IOStream(Runnable):
         self.output_file = None
         self.callbacks = []
 
-    def register(self, callback):
-        self.callbacks.append(callback)
-
     def __lt__(self, fp):
         self.input_file = fp
         return self
