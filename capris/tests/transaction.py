@@ -29,18 +29,15 @@ class TransactionTest(CaprisTest):
         behaviour.
         """
         @transactional()
-        def setup(transaction, run=False):
+        def setup(transaction):
             echo = transaction.echo
             pipe = echo('pattern') | transaction.cat
             assert not pipe.run()
-
-            if run:
-                return transaction.execute()
             return transaction
 
         transaction = setup()
         assert transaction.defined
-        assert setup(run=True)[0].std_out == 'pattern\n'
+        assert transaction.execute()[0].std_out == 'pattern\n'
 
     def test_iostream(self):
         """

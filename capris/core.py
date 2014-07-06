@@ -72,6 +72,7 @@ def run(commands, **kwargs):
     data = kwargs.pop('data', None)
     stream = None
 
+    # see reverse spawning recipe
     for command in reversed(commands):
         response = run_command(command,
                                stream=stream,
@@ -80,11 +81,14 @@ def run(commands, **kwargs):
         history.append(response)
         stream = response.process.stdin
 
+    # we communicate with the first command
     history[-1].process.communicate(data)
     history.reverse()
 
     response = history.pop()
     response.history = history
+    for res in history:
+        res.status_code = res.process.wait()
 
     proc = response.process
     response.std_out, response.std_err = proc.communicate()
