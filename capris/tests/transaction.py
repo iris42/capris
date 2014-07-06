@@ -77,7 +77,9 @@ class TransactionTest(CaprisTest):
             return transaction
 
         transaction = setup()
-        self.assertRaises(RuntimeError, transaction.execute)
+        pointer = []
+        self.assertRaises(RuntimeError, transaction.execute, pointer)
+        assert pointer[0].status_code == 1
 
     def test_lazy_option(self):
         """
