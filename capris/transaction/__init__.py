@@ -23,8 +23,9 @@ class Transaction(object):
         attr = attr.replace('_', '-')
         return self.command(attr)
 
-    def execute(self):
-        results = []
+    def execute(self, results=None):
+        if results is None:
+            results = []
         for command, runner, args, kwargs in self.commands:
             response = runner(command, *args, **kwargs)
             results.append(response)
