@@ -35,7 +35,8 @@ class Response(object):
             yield item
 
 
-def run_command(command, timeout=None, env=None, data=None, stream=None, communicate=True, cwd=None):
+def run_command(command, timeout=None, env=None, data=None, stream=None,
+                communicate=True, cwd=None):
     env = {} if env is None else env
     response = Response(command)
     response.env = env
