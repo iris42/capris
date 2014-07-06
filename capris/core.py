@@ -5,12 +5,12 @@ __all__ = ['Response', 'run', 'run_command']
 
 
 class Response(object):
-    def __init__(self, process=None):
+    def __init__(self, command, process=None):
         self.history = []
         self.env = {}
 
         self.process = process
-        self.command = None
+        self.command = command
         self.status_code = None
 
         self.exception = None
@@ -23,7 +23,7 @@ class Response(object):
 
     def __repr__(self):
         if self.command:
-            return '<Response [%s]>' % (self.command[0])
+           return '<Response [%s]>' % (self.command[0])
         return '<Response>'
 
     def __iter__(self):
@@ -35,35 +35,31 @@ class Response(object):
             yield item
 
 
-def run_command(command, env=None, data=None, timeout=None, cwd=None):
-    environment = env if env is not None else {}
-    response = Response()
-    response.command = command
-    response.env = environment
+def run_command(command, timeout=None, env=None, data=None, stream=None, communicate=True, cwd=None):
+    env = {} if env is None else env
+    response = Response(command)
+    response.env = env
 
     def callback():
-        try:
-            proc = Popen(args=command,
-                         env=env,
-                         universal_newlines=True,
-                         shell=False,
-                         stdout=PIPE,
-                         stderr=PIPE,
-                         stdin=PIPE,
-                         bufsize=0,
-                         cwd=cwd)
-            response.process = proc
+        proc = Popen(args=command,
+                     shell=False,
+                     env=env,
+                     cwd=cwd,
+                     universal_newlines=True,
+                     stdin=PIPE,
+                     stdout=PIPE if stream is None else stream,
+                     stderr=PIPE,
+                     bufsize=0)
+        response.process = proc
+        if communicate:
             response.std_out, response.std_err = proc.communicate(data)
             response.status_code = proc.wait()
-        except Exception as err:
-            response.exception = err
 
     if timeout is not None:
         thread = Thread(target=callback)
         thread.start()
-
         thread.join(timeout)
-        if thread.is_alive():
+        if thread.is_alive:
             response.process.terminate()
             thread.join()
     else:
@@ -73,18 +69,24 @@ def run_command(command, env=None, data=None, timeout=None, cwd=None):
 
 def run(commands, **kwargs):
     history = []
-    data = kwargs.pop('data') if 'data' in kwargs else None
+    data = kwargs.pop('data', None)
+    stream = None
 
-    for command in commands:
-        if len(history):
-            data = history[-1].std_out[0:10240]
-
-        response = run_command(command, data=data, **kwargs)
-        if response.exception is not None:
-            raise response.exception
-
+    for command in reversed(commands):
+        response = run_command(command,
+                               stream=stream,
+                               communicate=False,
+                               **kwargs)
         history.append(response)
+        stream = response.process.stdin
 
-    res = history.pop()
-    res.history = history
-    return res
+    history[-1].process.communicate(data)
+    history.reverse()
+
+    response = history.pop()
+    response.history = history
+
+    proc = response.process
+    response.std_out, response.std_err = proc.communicate()
+    response.status_code = proc.wait()
+    return response

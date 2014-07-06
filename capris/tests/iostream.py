@@ -29,7 +29,7 @@ class IOStreamTest(CaprisTest):
 
         def callback(response):
             # cat always returns 0...
-            self.helpers.assert_ok(response)
+            assert response.ok()
 
             # but the status code for grep is 1
             for item in response.history:

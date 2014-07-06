@@ -30,7 +30,6 @@ class TransactionTest(CaprisTest):
         """
         @transactional()
         def setup(transaction, run=False):
-            grep = transaction.grep
             echo = transaction.echo
             pipe = echo('pattern') | transaction.cat
             assert not pipe.run()

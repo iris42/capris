@@ -10,7 +10,7 @@ def main():
     for test in capris.tests.get_tests():
         suite.addTest(test)
 
-    runner.failfast = True
+    #runner.failfast = True
     result = runner.run(suite)
 
     if not result.wasSuccessful():
