@@ -85,9 +85,8 @@ def run(commands, **kwargs):
         stream = response.process.stdin
         history.append(response)
 
-    # we communicate with the first command
-    history[-1].process.communicate(data)
     history.reverse()
+    history[0].process.communicate(data)
 
     length = len(history)
     for index, res in enumerate(history, 1):
