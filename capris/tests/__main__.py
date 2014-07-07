@@ -5,7 +5,7 @@ import capris.tests
 
 def main():
     suite = unittest.TestSuite()
-    runner = unittest.TextTestRunner()
+    runner = unittest.TextTestRunner(verbosity=0)
 
     for test in capris.tests.get_tests():
         suite.addTest(test)

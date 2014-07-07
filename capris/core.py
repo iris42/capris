@@ -13,7 +13,7 @@ class Response(object):
         self.command = command
         self.status_code = None
 
-        self.exception = None
+        self.pid = None
         self.std_err = ''
         self.std_out = ''
 
@@ -82,8 +82,8 @@ def run(commands, **kwargs):
                                stream=stream,
                                communicate=False,
                                **kwargs)
-        history.append(response)
         stream = response.process.stdin
+        history.append(response)
 
     # we communicate with the first command
     history[-1].process.communicate(data)
@@ -92,9 +92,12 @@ def run(commands, **kwargs):
     response = history.pop()
     response.history = history
     for res in history:
-        res.status_code = res.process.wait()
+        process = res.process
+        res.pid = process.pid
+        res.status_code = process.wait()
 
     proc = response.process
     response.std_out, response.std_err = proc.communicate()
     response.status_code = proc.wait()
+    response.pid = proc.pid
     return response

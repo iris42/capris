@@ -14,12 +14,6 @@ class Helpers(object):
     def stringio(self):
         return StringIO
 
-    def assert_ok(self, response):
-        assert response.status_code == 0
-
-    def last_response(self, transaction):
-        return transaction.results[-1]
-
 
 class CaprisTest(unittest.TestCase):
     helpers = Helpers()

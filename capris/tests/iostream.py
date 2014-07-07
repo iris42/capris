@@ -14,7 +14,7 @@ class IOStreamTest(CaprisTest):
 
         response = stream.run()
 
-        self.helpers.assert_ok(response)
+        assert response.ok()
         assert stream.output_file.getvalue() == response.std_out == 'pattern\n'
 
     def test_callbacks_and_data(self):
