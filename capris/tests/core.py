@@ -1,6 +1,7 @@
 from capris.tests import CaprisTest
 from capris.core import run, run_command
 
+
 class CoreTest(CaprisTest):
     def test_run_command(self):
         """
