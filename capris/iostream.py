@@ -32,6 +32,9 @@ class IOStream(Runnable):
         for item in self.runnable:
             yield item
 
+    def __str__(self):
+        return str(self.runnable)
+
     def run(self, **kwargs):
         if 'data' not in kwargs and self.input_file:
             kwargs['data'] = self.input_file.read()
