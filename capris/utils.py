@@ -25,14 +25,14 @@ def escape(string):
 
 def option_iterable(positional, options):
     for key, value in options.items():
-        is_argument = len(key) == 1
-        option = ("-%s" if is_argument else
+        is_flag = len(key) == 1
+        option = ("-%s" if is_flag else
                   "--%s") % key.replace('_', '-')
 
         if value is None:
             yield option
             continue
-        string = ("%s %s" if is_argument else
+        string = ("%s %s" if is_flag else
                   "%s=%s")
         yield string % (option, escape(value))
 
