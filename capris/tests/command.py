@@ -15,6 +15,7 @@ class CommandTest(CaprisTest):
 
         response = grep.run(env={'X': 'z'})
         assert response.env['X'] == 'z'
+        assert response.pid
         assert grep.env['X'] == 'y'
 
         sub = grep.sub()

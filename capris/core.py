@@ -55,6 +55,7 @@ def run_command(command, timeout=None, env=None, data=None, stream=None,
         if communicate:
             response.std_out, response.std_err = proc.communicate(data)
             response.status_code = proc.wait()
+            response.pid = proc.pid
 
     if timeout is not None:
         thread = Thread(target=callback)
