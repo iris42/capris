@@ -89,15 +89,14 @@ def run(commands, **kwargs):
     history[-1].process.communicate(data)
     history.reverse()
 
-    response = history.pop()
-    response.history = history
-    for res in history:
+    length = len(history)
+    for index, res in enumerate(history, 1):
         process = res.process
         res.pid = process.pid
+        if index == length:
+            res.std_out, res.std_err = process.communicate()
         res.status_code = process.wait()
 
-    proc = response.process
-    response.std_out, response.std_err = proc.communicate()
-    response.status_code = proc.wait()
-    response.pid = proc.pid
+    response = history.pop()
+    response.history = history
     return response
