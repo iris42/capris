@@ -30,7 +30,7 @@ class Response(object):
         iterable = self.std_out.split('\n')
         maxindex = len(iterable) - 1
         for index, item in enumerate(iterable):
-            if not item and index == maxindex:
+            if not item and index >= maxindex:
                 break
             yield item
 
