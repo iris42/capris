@@ -6,8 +6,9 @@ Capris
    :target: https://landscape.io/github/eugene-eeo/capris/master
       :alt: Code Health
 
-Capris is a MIT-licensed Python library built for writing
-composable apps that leverage the command line.
+Capris is a semantically versioned, MIT-licensed Python library
+built for writing composable apps that leverage external
+programs.
 
 A simple example of writing your own git wrapper, complete
 with other command-line utilities that you love and use on
