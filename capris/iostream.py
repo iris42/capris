@@ -40,7 +40,7 @@ class IOStream(Runnable):
         if isinstance(self.runnable, Pipe):
             method = run
 
-        response = method(tuple(self), **kwargs)
+        response = method(tuple(self.runnable), **kwargs)
         if self.output_file:
             self.output_file.write(response.std_out)
 
