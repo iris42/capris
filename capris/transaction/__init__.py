@@ -26,8 +26,8 @@ class Transaction(object):
     def execute(self, results=None):
         if results is None:
             results = []
-        for command, runner, args, kwargs in self.commands:
-            response = runner(command, *args, **kwargs)
+        for command, runner, kwargs in self.commands:
+            response = runner(command, **kwargs)
             results.append(response)
             if not response.ok():
                 message = ("cannot continue: command %s exited with %s"

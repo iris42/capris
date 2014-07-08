@@ -23,13 +23,12 @@ class TransactionRunnable(Runnable):
         iostream.history = self.history
         return iostream
 
-    def run(self, *args, **kwargs):
+    def run(self, **kwargs):
         # assume all classes inherit from their derived
         # ones first
         self.history.append((
             self,
             self.__class__.__bases__[1].run,
-            args,
             kwargs
             ))
 
