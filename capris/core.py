@@ -49,8 +49,8 @@ def communicate(response, proc, data, timeout, communicate=True):
         if thread.is_alive:
             response.process.terminate()
             thread.join()
-    else:
-        callback()
+        return
+    callback()
 
 
 def run_command(command, timeout=None, env=None, data=None, stream=None,
