@@ -31,7 +31,7 @@ class Command(Runnable):
 
     def run(self, **kwargs):
         env = self.env.copy()
-        env.update(kwargs.pop('env', {}))
+        env.update(kwargs.get('env', {}))
         kwargs['env'] = env
         response = run_command(tuple(self), **kwargs)
         return response
