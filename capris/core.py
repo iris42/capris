@@ -35,7 +35,7 @@ class Response(object):
                 break
             yield item
 
-def communicate(response, proc, data, timeout, communicate=True):
+def communicate(response, proc, data, timeout, communicate):
     def callback():
         response.pid = proc.pid
         if communicate:
@@ -70,7 +70,11 @@ def run_command(command, timeout=None, env=None, data=None, stream=None,
                  bufsize=0)
     response.process = proc
     if not lazy:
-        communicate(response, proc, data, timeout)
+        communicate(response=response,
+                    proc=proc,
+                    data=data,
+                    timeout=timeout,
+                    communicate=True)
 
     return response
 
