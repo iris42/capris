@@ -14,9 +14,9 @@ class Command(Runnable):
         self.env = {}
 
     @property
-    def absolute(self, path=None):
+    def absolute(self):
         copy = self.copy()
-        copy.command = which(self.command, path)
+        copy.command = which(self.command)
         return copy
 
     def __iter__(self):
