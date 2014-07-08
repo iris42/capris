@@ -4,13 +4,11 @@ from os.path import join, abspath, exists
 __all__ = ['which', 'escape', 'option_iterable']
 
 
-def which(executable, path):
+def which(executable):
     if exists(executable):
         return abspath(executable)
 
-    path = getenv('PATH') if path is None else path
-
-    for directory in path.split(pathsep):
+    for directory in getenv('PATH').split(pathsep):
         fpath = join(directory, executable)
         if exists(fpath) and access(fpath, X_OK):
             return fpath
