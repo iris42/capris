@@ -6,11 +6,12 @@ __all__ = ['Command']
 
 
 class Command(Runnable):
+    base_command = None
+
     def __init__(self, command, *positional, **options):
         self.command = command
         self.positional = list(positional)
         self.options = options
-        self.base_command = None
         self.env = {}
 
     @property
@@ -29,15 +30,15 @@ class Command(Runnable):
             for item in option_iterable(self.positional, self.options):
                 yield item
 
+    def __str__(self):
+        return ' '.join(self)
+
     def run(self, **kwargs):
         env = self.env.copy()
         env.update(kwargs.get('env', {}))
         kwargs['env'] = env
         response = run_command(tuple(self), **kwargs)
         return response
-
-    def __str__(self):
-        return ' '.join(self)
 
     def __getattr__(self, attribute):
         values = self.__dict__

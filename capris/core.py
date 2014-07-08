@@ -5,15 +5,16 @@ __all__ = ['Response', 'run', 'run_command']
 
 
 class Response(object):
+    status_code = None
+    pid = None
+
     def __init__(self, command, process=None):
         self.history = []
         self.env = {}
 
         self.process = process
         self.command = command
-        self.status_code = None
 
-        self.pid = None
         self.std_err = ''
         self.std_out = ''
 
@@ -34,28 +35,12 @@ class Response(object):
                 break
             yield item
 
-
-def run_command(command, timeout=None, env=None, data=None, stream=None,
-                communicate=True, cwd=None):
-    env = {} if env is None else env
-    response = Response(command)
-    response.env = env
-
+def communicate(response, proc, data, timeout, communicate=True):
     def callback():
-        proc = Popen(args=command,
-                     shell=False,
-                     env=env,
-                     cwd=cwd,
-                     universal_newlines=True,
-                     stdin=PIPE,
-                     stdout=PIPE if stream is None else stream,
-                     stderr=PIPE,
-                     bufsize=0)
-        response.process = proc
+        response.pid = proc.pid
         if communicate:
             response.std_out, response.std_err = proc.communicate(data)
-            response.status_code = proc.wait()
-            response.pid = proc.pid
+        response.status_code = proc.wait()
 
     if timeout is not None:
         thread = Thread(target=callback)
@@ -66,12 +51,34 @@ def run_command(command, timeout=None, env=None, data=None, stream=None,
             thread.join()
     else:
         callback()
+
+
+def run_command(command, timeout=None, env=None, data=None, stream=None,
+                lazy=False, cwd=None):
+    env = {} if env is None else env
+    response = Response(command)
+    response.env = env
+
+    proc = Popen(args=command,
+                 shell=False,
+                 env=env,
+                 cwd=cwd,
+                 universal_newlines=True,
+                 stdin=PIPE,
+                 stdout=PIPE if stream is None else stream,
+                 stderr=PIPE,
+                 bufsize=0)
+    response.process = proc
+    if not lazy:
+        communicate(response, proc, data, timeout)
+
     return response
 
 
 def run(commands, **kwargs):
     history = []
     data = kwargs.pop('data', None)
+    timeout = kwargs.pop('timeout', None)
     stream = None
 
     # reverse spawning recipe:
@@ -81,7 +88,7 @@ def run(commands, **kwargs):
     for command in reversed(commands):
         response = run_command(command,
                                stream=stream,
-                               communicate=False,
+                               lazy=True,
                                **kwargs)
         stream = response.process.stdin
         history.append(response)
@@ -91,11 +98,11 @@ def run(commands, **kwargs):
 
     length = len(history)
     for index, res in enumerate(history, 1):
-        process = res.process
-        res.pid = process.pid
-        if index == length:
-            res.std_out, res.std_err = process.communicate()
-        res.status_code = process.wait()
+        communicate(response=res,
+                    proc=res.process,
+                    data=None,
+                    timeout=timeout,
+                    communicate=(index == length))
 
     response = history.pop()
     response.history = history

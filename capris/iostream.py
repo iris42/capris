@@ -6,10 +6,11 @@ __all__ = ['IOStream']
 
 
 class IOStream(Runnable):
+    input_file = None
+    output_file = None
+
     def __init__(self, runnable):
         self.runnable = runnable
-        self.input_file = None
-        self.output_file = None
         self.callbacks = []
 
     def __lt__(self, fp):
