@@ -35,7 +35,7 @@ class Response(object):
                 break
             yield item
 
-def communicate(response, proc, data, timeout, communicate):
+def setup_response(response, proc, data, timeout, communicate):
     def callback():
         response.pid = proc.pid
         if communicate:
@@ -70,11 +70,11 @@ def run_command(command, timeout=None, env=None, data=None, stream=None,
                  bufsize=0)
     response.process = proc
     if not lazy:
-        communicate(response=response,
-                    proc=proc,
-                    data=data,
-                    timeout=timeout,
-                    communicate=True)
+        setup_response(response=response,
+                       proc=proc,
+                       data=data,
+                       timeout=timeout,
+                       communicate=True)
 
     return response
 
@@ -102,11 +102,11 @@ def run(commands, **kwargs):
 
     length = len(history)
     for index, res in enumerate(history, 1):
-        communicate(response=res,
-                    proc=res.process,
-                    data=None,
-                    timeout=timeout,
-                    communicate=(index == length))
+        setup_response(response=res,
+                       proc=res.process,
+                       data=None,
+                       timeout=timeout,
+                       communicate=(index == length))
 
     response = history.pop()
     response.history = history
