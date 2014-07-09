@@ -43,6 +43,7 @@ Features
 - Built in support for pipes
 - DSL for command generation
 - Elegant responses and environment variables
+- Fast stream based pipelining
 - High-level unit tests for all classes
 - Safe- ``capris`` doesn't touch the shell
 - Smart option generation
@@ -50,7 +51,6 @@ Features
 - Thread safety
 - Transactions and redirection
 - Works with both Python 2 and 3
-- Fast stream based pipelining
 
 
 ------------
