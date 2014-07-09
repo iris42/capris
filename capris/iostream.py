@@ -40,9 +40,8 @@ class IOStream(Runnable):
         if 'data' not in kwargs and self.input_file:
             kwargs['data'] = self.input_file.read()
 
-        method = run_command
-        if isinstance(self.runnable, Pipe):
-            method = run
+        method = (run if isinstance(self.runnable, Pipe) else
+                  run_command)
 
         response = method(tuple(self.runnable), **kwargs)
         if self.output_file:

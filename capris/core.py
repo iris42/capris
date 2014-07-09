@@ -35,6 +35,7 @@ class Response(object):
                 break
             yield item
 
+
 def setup_response(response, proc, data, timeout, communicate):
     def callback():
         response.pid = proc.pid
@@ -82,7 +83,6 @@ def run_command(command, timeout=None, env=None, data=None, stream=None,
 def run(commands, **kwargs):
     history = []
     data = kwargs.pop('data', None)
-    timeout = kwargs.get('timeout', None)
     stream = None
 
     # reverse spawning recipe:
@@ -100,6 +100,7 @@ def run(commands, **kwargs):
     history.reverse()
     history[0].process.communicate(data)
 
+    timeout = kwargs.get('timeout', None)
     length = len(history)
     for index, res in enumerate(history, 1):
         setup_response(response=res,
