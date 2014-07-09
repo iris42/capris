@@ -7,6 +7,8 @@ __all__ = ['Response', 'run', 'run_command']
 class Response(object):
     status_code = None
     pid = None
+    std_err = None
+    std_out = None
 
     def __init__(self, command, process=None):
         self.history = []
@@ -14,9 +16,6 @@ class Response(object):
 
         self.process = process
         self.command = command
-
-        self.std_err = ''
-        self.std_out = ''
 
     def ok(self, *allowed):
         return (self.status_code == 0 or
