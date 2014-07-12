@@ -13,7 +13,7 @@ class Transaction(object):
 
     @property
     def defined(self):
-        return len(self.commands) != 0
+        return len(self.commands) > 0
 
     def __getattr__(self, attr):
         values = self.__dict__
