@@ -1,113 +1,81 @@
-from threading import Thread
 from subprocess import Popen, PIPE
-
-__all__ = ['Response', 'run', 'run_command']
 
 
 class Response(object):
-    status_code = None
-    pid = None
-    std_err = None
-    std_out = None
-
-    def __init__(self, command, process=None):
-        self.history = []
-        self.env = {}
-
-        self.process = process
+    def __init__(self, command, proc, pid, status, stdout, stderr):
         self.command = command
-
-    def ok(self, *allowed):
-        return (self.status_code == 0 or
-                self.status_code in allowed)
+        self.proc = proc
+        self.pid = pid
+        self.status = status
+        self.stdout = stdout
+        self.stderr = stderr
+        self.history = []
 
     def __repr__(self):
-        if self.command:
-            return '<Response [%s]>' % (self.command[0])
-        return '<Response>'
+        if not self.command:
+            return '<Response>'
+        return '<Response [%s]>' % (self.command[0])
 
-    def __iter__(self):
-        iterable = self.std_out.split('\n')
-        maxindex = len(iterable) - 1
-        for index, item in enumerate(iterable):
-            if not item and index >= maxindex:
-                break
-            yield item
+    def ok(self, allowed=(0,)):
+        return self.status in allowed
 
 
-def setup_response(response, proc, data, timeout, communicate):
-    def callback():
-        response.pid = proc.pid
-        if communicate:
-            response.std_out, response.std_err = proc.communicate(data)
-        response.status_code = proc.wait()
+class Process(object):
+    def __init__(self, args, cwd, env, data):
+        self._subprocess = None
+        self.args = args
+        self.data = data
+        self.cwd = cwd
+        self.env = env
+        self.stdin = PIPE
+        self.stdout = PIPE
+        self.stderr = PIPE
 
-    if timeout is not None:
-        thread = Thread(target=callback)
-        thread.start()
-        thread.join(timeout)
-        if thread.is_alive:
-            response.process.terminate()
-            thread.join()
-        return
-    callback()
+    def __repr__(self):
+        return '<Process [%s]>' % (' '.join(self.args))
 
+    @property
+    def subprocess(self):
+        if self._subprocess:
+            return self._subprocess
+        self._subprocess = Popen(
+            args=self.args,
+            stdin=self.stdin,
+            stdout=self.stdout,
+            stderr=self.stderr,
+            universal_newlines=True,
+            cwd=self.cwd,
+            env=self.env,
+        )
+        return self._subprocess
 
-def run_command(command, timeout=None, env=None, data=None, stream=None,
-                lazy=False, cwd=None):
-    env = env or {}
-    response = Response(command)
-    response.env = env
-
-    proc = Popen(args=command,
-                 shell=False,
-                 env=env,
-                 cwd=cwd,
-                 universal_newlines=True,
-                 stdin=PIPE,
-                 stdout=PIPE if stream is None else stream,
-                 stderr=PIPE,
-                 bufsize=0)
-    response.process = proc
-    if not lazy:
-        setup_response(response=response,
-                       proc=proc,
-                       data=data,
-                       timeout=timeout,
-                       communicate=True)
-
-    return response
+    def run(self):
+        proc = self.subprocess
+        stdout, stderr = proc.communicate(self.data)
+        return Response(
+            command=self.args,
+            pid=proc.pid,
+            proc=self,
+            status=proc.wait(),
+            stdout=stdout,
+            stderr=stderr,
+        )
 
 
-def run(commands, **kwargs):
+def run(commands, cwd=None, env=None, data=None):
     history = []
-    data = kwargs.pop('data', None)
-    stream = None
+    previous_stdin = PIPE
 
-    # reverse spawning recipe:
-    #   cat = Popen(['cat'], stdin=PIPE, stdout=PIPE)
-    #   grep = Popen(['grep', '.'], stdin=PIPE, stdout=cat.stdin)
-    #
-    for command in reversed(commands):
-        response = run_command(command,
-                               stream=stream,
-                               lazy=True,
-                               **kwargs)
-        stream = response.process.stdin
-        history.append(response)
+    for item in reversed(commands):
+        proc = Process(args=item, cwd=cwd, env=env, data=None)
+        proc.stdout = previous_stdin
+        history.append(proc)
+        previous_stdin = proc.subprocess.stdin
 
     history.reverse()
-    history[0].process.communicate(data)
+    history[0].data = data
 
-    timeout = kwargs.get('timeout', None)
-    length = len(history)
-    for index, res in enumerate(history, 1):
-        setup_response(response=res,
-                       proc=res.process,
-                       data=None,
-                       timeout=timeout,
-                       communicate=(index == length))
-
-    response = history.pop()
-    response.history = history
-    return response
+    responses = [proc.run() for proc in history]
+    r = responses.pop()
+    r.history = history[:-1]
+    return r
