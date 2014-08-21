@@ -55,7 +55,7 @@ def setup_response(response, proc, data, timeout, communicate):
 
 def run_command(command, timeout=None, env=None, data=None, stream=None,
                 lazy=False, cwd=None):
-    env = {} if env is None else env
+    env = env or {}
     response = Response(command)
     response.env = env
 

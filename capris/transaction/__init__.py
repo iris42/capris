@@ -30,8 +30,8 @@ class Transaction(object):
             response = runner(command, **kwargs)
             results.append(response)
             if not response.ok():
-                message = ("cannot continue: command %s exited with %s"
-                           % (repr(command), response.status_code))
+                message = ("cannot continue: command %r exited with %s"
+                           % (command, response.status_code))
                 raise RuntimeError(message)
         return results
 
