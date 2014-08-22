@@ -1,17 +1,53 @@
-capris
+======
+Capris
 ======
 
-Capris is a wrapper around the subprocess library for easily writing
-beautiful applications that leverage the command line.
+Capris is a semantically versioned, MIT-licensed Python library
+built for writing composable apps that leverage external
+programs.
+
+A simple example of writing your own git wrapper, complete
+with other command-line utilities that you love and use on
+a daily basis:
 
 .. code-block:: python
 
-    from capris import Command
-    git = Command('git')
+    >>> from capris import Command
+    >>> git, grep = Command('git'), Command('grep')
 
-    response = git.log(n=10).run()
-    assert response.ok()
+    >>> pipe = git.log(n=10, pretty="oneline") | grep(r'[a-f0-9]\{40\}', o=None)
+    >>> response = pipe.run()
+    >>> response.status_code
+    0
+    >>> print response.std_out
+    ...
 
-It can be used (and is most suited) for testing command line tools
-as well. Combining it with the ``assert`` statement makes for very
-nice and elegant code.
+``capris`` allows you to write code or tests that just calls
+commands and helps you focus on writing the `commands that you
+need`, not the code required to handle calling and getting
+responses from the commands. ``capris`` does all of the mucking
+around with strings and escaping for you.
+
+------------
+Installation
+------------
+
+.. code-block:: sh
+
+    $ pip install capris
+
+-------------
+Documentation
+-------------
+
+You can read the documentation at https://pythonhosted.org/capris/.
+
+
+- Code Health: |Health|
+- Maintainer: `Eugene Eeo`_
+- License: MIT
+
+.. _Eugene Eeo: https://github.com/eugene-eeo
+.. |Health| image:: https://landscape.io/github/eugene-eeo/capris/master/landscape.png
+   :target: https://landscape.io/github/eugene-eeo/capris/master
+      :alt: Code Health
