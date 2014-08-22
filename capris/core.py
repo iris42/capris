@@ -77,5 +77,5 @@ def run(commands, cwd=None, env=None, data=None):
 
     responses = [proc.run() for proc in history]
     r = responses.pop()
-    r.history = history[:-1]
+    r.history = responses
     return r
