@@ -1,38 +1,15 @@
-from os import getenv, X_OK, access, pathsep
-from os.path import join, abspath, exists
-
-__all__ = ['which', 'escape', 'option_iterable']
-
-
-def which(executable):
-    if exists(executable):
-        return abspath(executable)
-
-    for directory in getenv('PATH').split(pathsep):
-        fpath = join(directory, executable)
-        if exists(fpath) and access(fpath, X_OK):
-            return fpath
-    raise RuntimeError('executable %s is not found' % (executable))
+def escape(value):
+    if value in (True, False):
+        return str(value).lower()
+    return str(value)
 
 
-def escape(string):
-    if string in (True, False):
-        return str(string).lower()
-    return str(string)
-
-
-def option_iterable(positional, options):
+def optionify(options):
     for key, value in options.items():
+        key = key.replace('_', '-')
         is_flag = len(key) == 1
-        option = ("-%s" if is_flag else
-                  "--%s") % key.replace('_', '-')
-
         if value is None:
-            yield option
+            yield ('-%s' if is_flag else '--%s') % key
             continue
-        string = ("%s %s" if is_flag else
-                  "%s=%s")
-        yield string % (option, escape(value))
-
-    for item in positional:
-        yield escape(item)
+        yield ('-%s=%s' if is_flag else
+               '--%s=%s') % (key, escape(value))

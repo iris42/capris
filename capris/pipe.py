@@ -1,33 +1,25 @@
 from capris.core import run
 from capris.runnable import Runnable
 
-__all__ = ['Pipe']
-
 
 class Pipe(Runnable):
     def __init__(self, *commands):
-        self.commands = list(commands)
+        self.commands = commands
 
-    def __str__(self):
-        stack = []
-        for item in self.commands:
-            stack.append(str(item))
-        return ' | '.join(stack)
-
-    def run(self, *args, **kwargs):
-        return run(tuple(self), *args, **kwargs)
+    def append(self, thing):
+        self.commands = self.commands + (thing,)
+        return self
 
     def __iter__(self):
-        for item in self.commands:
-            yield tuple(item)
-
-    def append(self, command):
-        self.commands.append(command)
-        return self
-
-    def remove(self, command):
-        self.commands.remove(command)
-        return self
+        for runnable in self.commands:
+            if isinstance(runnable, Pipe):
+                for item in runnable:
+                    yield item
+                continue
+            yield tuple(runnable)
 
     __iadd__ = append
-    __isub__ = remove
+    __lshift__ = append
+
+    def run(self, **kwargs):
+        return run(tuple(self), **kwargs)
