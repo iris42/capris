@@ -1,17 +1,17 @@
-from capris.core import run, Process
+from capris.core import run
 from capris.utils import escape, optionify
 from capris.runnable import Runnable
 
 
 class Command(Runnable):
     base = ()
+    cwd = None
 
     def __init__(self, name, *arguments, **options):
         self.command = name
         self.arguments = arguments
         self.options = options
         self.env = {}
-        self.cwd = None
 
     def __iter__(self):
         for item in self.base:
