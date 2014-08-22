@@ -27,13 +27,3 @@ def test_data():
     response = cat.run(data='this')
     assert response.ok()
     assert response.stdout == 'this'
-
-
-def test_piping():
-    pipe = echo('haha') | cat
-    response = pipe.run()
-
-    assert response.ok()
-    assert response.command == ('cat',)
-    assert response.stdout == 'haha\n'
-    assert response.history[0].command == ('echo', 'haha')
