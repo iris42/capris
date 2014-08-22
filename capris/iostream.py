@@ -2,10 +2,11 @@ from capris.runnable import Runnable
 
 
 class IOStream(Runnable):
-    def __init__(self, runnable, input=None, output=None):
+    input = None
+    output = None
+
+    def __init__(self, runnable):
         self.runnable = runnable
-        self.input = input
-        self.output = output
 
     def __gt__(self, other):
         self.output = other
