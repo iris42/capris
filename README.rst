@@ -4,11 +4,9 @@ Capris
 
 Capris is a semantically versioned, MIT-licensed Python library
 built for writing composable apps that leverage external
-programs.
-
-A simple example of writing your own git wrapper, complete
-with other command-line utilities that you love and use on
-a daily basis:
+programs. A simple example of writing your own git wrapper,
+complete with other command-line utilities that you love and use
+on a daily basis:
 
 .. code-block:: python
 
@@ -39,6 +37,27 @@ Documentation
 
 You can read the documentation at https://pythonhosted.org/capris/.
 
+------------
+Contributing
+------------
+
+If you want to contribute, we follow the Github workflow, so fork
+the repo, work on the code and just make a pull request (make sure
+all tests pass beforehand, at least in the last commit of your pull
+request). In short:
+
+.. code-block:: sh
+
+    $ git clone ssh://git@github.com/$USERNAME/graphlite.git
+    $ cd graphlite
+    $ git checkout -b $FEATURE
+    $ # hackedy hack hack
+    $ py.test tests
+    $ git commit -a
+    $ git push
+
+Note that we use py.test for testing so if you haven't, make sure
+you pip install pytest. But you should.
 
 - **Code Health:** |Health|
 - **Maintainer:** `Eugene Eeo`_
