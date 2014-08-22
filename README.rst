@@ -43,9 +43,9 @@ Documentation
 You can read the documentation at https://pythonhosted.org/capris/.
 
 
-- Code Health: |Health|
-- Maintainer: `Eugene Eeo`_
-- License: MIT
+- **Code Health:** |Health|
+- **Maintainer:** `Eugene Eeo`_
+- **License:** MIT
 
 .. _Eugene Eeo: https://github.com/eugene-eeo
 .. |Health| image:: https://landscape.io/github/eugene-eeo/capris/master/landscape.png
