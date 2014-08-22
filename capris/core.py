@@ -67,10 +67,10 @@ def run(commands, cwd=None, env=None, data=None):
     previous_stdin = PIPE
 
     for item in reversed(commands):
-        proc = Process(args=item, cwd=cwd, env=env, data=None)
-        proc.stdout = previous_stdin
-        history.append(proc)
-        previous_stdin = proc.subprocess.stdin
+        process = Process(args=item, cwd=cwd, env=env, data=None)
+        process.stdout = previous_stdin
+        history.append(process)
+        previous_stdin = process.subprocess.stdin
 
     history.reverse()
     history[0].data = data
