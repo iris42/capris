@@ -12,15 +12,12 @@ a daily basis:
 
 .. code-block:: python
 
-    >>> from capris import Command
-    >>> git, grep = Command('git'), Command('grep')
+    from capris import Command
+    git, grep = Command('git'), Command('grep')
 
-    >>> pipe = git.log(n=10, pretty="oneline") | grep(r'[a-f0-9]\{40\}', o=None)
-    >>> response = pipe.run()
-    >>> response.status_code
-    0
-    >>> print response.std_out
-    ...
+    pipe = git.log(n=10, pretty="oneline") | grep(r'[a-f0-9]\{40\}', o=None)
+    response = pipe.run()
+    print response.std_out
 
 ``capris`` allows you to write code or tests that just calls
 commands and helps you focus on writing the `commands that you
