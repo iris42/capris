@@ -10,6 +10,16 @@ class Pipe(Runnable):
         self.commands = self.commands + (thing,)
         return self
 
+    def __iter__(self):
+        for runnable in self.commands:
+            if isinstance(runnable, Pipe):
+                for item in runnable:
+                    yield item
+                continue
+            yield tuple(runnable)
+
+    __iadd__ = append
+    __lshift__ = append
+
     def run(self, **kwargs):
-        args = [tuple(x) for x in self.commands]
-        return run(args, **kwargs)
+        return run(tuple(self), **kwargs)
