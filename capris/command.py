@@ -1,8 +1,9 @@
 from capris.core import run, Process
 from capris.utils import escape, optionify
+from capris.runnable import Runnable
 
 
-class Command(object):
+class Command(Runnable):
     base = ()
 
     def __init__(self, name, *arguments, **options):
@@ -28,10 +29,10 @@ class Command(object):
         return (self,)
 
     @property
-    def environment(self):
+    def environ(self):
         env = {}
         if self.base:
-            env = self.base.environment
+            env = self.base.environ
         env.update(self.env)
         return env
 
@@ -59,7 +60,7 @@ class Command(object):
     def run(self, env=None, cwd=None, data=None):
         return run(
             (tuple(self),),
-            env=env or self.environment,
+            env=env or self.environ,
             cwd=cwd or self.cwd,
             data=data,
         )

@@ -1,12 +1,10 @@
 from capris.core import run
+from capris.runnable import Runnable
 
 
-class Pipe(object):
+class Pipe(Runnable):
     def __init__(self, *commands):
         self.commands = commands
-
-    def __or__(self, other):
-        return Pipe(*(self.commands + other.commands))
 
     def append(self, thing):
         self.commands = self.commands + (thing,)
