@@ -13,5 +13,3 @@ def optionify(options):
             continue
         yield ('-%s=%s' if is_flag else
                '--%s=%s') % (key, escape(value))
-
-

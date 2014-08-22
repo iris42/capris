@@ -8,7 +8,7 @@ class Command(Runnable):
 
     def __init__(self, name, *arguments, **options):
         self.command = name
-        self.arguments = list(arguments)
+        self.arguments = arguments
         self.options = options
         self.env = {}
         self.cwd = None
@@ -42,10 +42,21 @@ class Command(Runnable):
         cmd.cwd = self.cwd
         return cmd
 
+    def copy(self):
+        cmd = Command(
+            self.command,
+            *self.arguments,
+            **self.options
+        )
+        cmd.env = self.env.copy()
+        cmd.cwd = self.cwd
+        return cmd
+
     def __call__(self, *arguments, **options):
-        self.arguments.extend(arguments)
-        self.options.update(options)
-        return self
+        cmd = self.copy()
+        cmd.arguments = cmd.arguments + arguments
+        cmd.options.update(options)
+        return cmd
 
     def __getattr__(self, attribute):
         values = self.__dict__
