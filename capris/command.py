@@ -36,10 +36,8 @@ class Command(Runnable):
         env.update(self.env)
         return env
 
-    def subcommand(self, command, arguments=(), options={}):
-        cmd = Command(command,
-                      *arguments,
-                      **options)
+    def subcommand(self, command):
+        cmd = Command(command)
         cmd.base = self
         cmd.cwd = self.cwd
         return cmd
