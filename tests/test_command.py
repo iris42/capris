@@ -1,6 +1,4 @@
-from capris.command import Command
-echo = Command('echo')
-cat = Command('cat')
+from capris.commons import cat, echo
 
 
 def test_basic():
@@ -24,6 +22,6 @@ def test_environ():
 
 
 def test_data():
-    response = cat.run(data='this')
-    assert response.ok()
-    assert response.stdout == 'this'
+    r = cat.run(data='this')
+    assert r.ok()
+    assert r.stdout == 'this'
