@@ -1,12 +1,12 @@
-from capris.runnable import Runnable
-
-
-class IOStream(Runnable):
+class IOStream(object):
     input = None
     output = None
 
     def __init__(self, runnable):
         self.runnable = runnable
+
+    def __or__(self):
+        raise NotImplementedError
 
     def __gt__(self, other):
         self.output = other
