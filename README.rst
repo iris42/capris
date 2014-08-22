@@ -1,6 +1,13 @@
-======
-Capris
-======
+::
+
+    Python                _
+       _______ ____  ____(_)__
+      / __/ _ `/ _ \/ __/ (_-<
+      \__/\_,_/ .__/_/ /_/___/
+             /_/ embrace the shell
+
+
+**Supported Pythons:** 2.6+, 3.2+
 
 Capris is a semantically versioned, MIT-licensed Python library
 built for writing composable apps that leverage external
