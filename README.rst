@@ -55,8 +55,8 @@ request). In short:
 
 .. code-block:: sh
 
-    $ git clone ssh://git@github.com/$USERNAME/graphlite.git
-    $ cd graphlite
+    $ git clone ssh://git@github.com/$USERNAME/capris.git
+    $ cd capris
     $ git checkout -b $FEATURE
     $ # hackedy hack hack
     $ py.test tests
