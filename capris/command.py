@@ -48,7 +48,7 @@ class Command(Runnable):
             *self.arguments,
             **self.options
         )
-        cmd.env = self.env.copy()
+        cmd.env = self.environ.copy()
         cmd.cwd = self.cwd
         return cmd
 
