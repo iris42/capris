@@ -19,7 +19,6 @@ class Pipe(Runnable):
             yield tuple(runnable)
 
     __iadd__ = append
-    __lshift__ = append
 
     def run(self, **kwargs):
         return run(tuple(self), **kwargs)
