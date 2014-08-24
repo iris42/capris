@@ -4,7 +4,7 @@ from capris.runnable import Runnable
 
 
 class Command(Runnable):
-    base = ()
+    base = tuple()
     cwd = None
 
     def __init__(self, name, *arguments, **options):
