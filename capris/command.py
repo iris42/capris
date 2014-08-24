@@ -36,26 +36,26 @@ class Command(Runnable):
         env.update(self.env)
         return env
 
-    def subcommand(self, command):
-        cmd = Command(command)
-        cmd.base = self
-        cmd.cwd = self.cwd
-        return cmd
-
-    def copy(self):
+    def copy(self, arguments, options):
+        opts = self.options.copy()
+        opts.update(options)
         cmd = Command(
             self.command,
-            *self.arguments,
-            **self.options
+            *(self.arguments + arguments),
+            **opts
         )
+        cmd.base = self.base
         cmd.env = self.environ.copy()
         cmd.cwd = self.cwd
         return cmd
 
     def __call__(self, *arguments, **options):
-        cmd = self.copy()
-        cmd.arguments = cmd.arguments + arguments
-        cmd.options.update(options)
+        return self.copy(arguments, options)
+
+    def subcommand(self, command):
+        cmd = Command(command)
+        cmd.base = self
+        cmd.cwd = self.cwd
         return cmd
 
     def __getattr__(self, attribute):
