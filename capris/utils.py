@@ -1,6 +1,6 @@
 def escape(value):
-    if value in (True, False):
-        return str(value).lower()
+    if value is True or value is False:
+        return 'true' if value else 'false'
     return str(value)
 
 

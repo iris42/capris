@@ -37,15 +37,14 @@ class Command(Runnable):
         return env
 
     def copy(self, arguments, options):
-        opts = self.options.copy()
-        opts.update(options)
         cmd = Command(
             self.command,
             *(self.arguments + arguments),
-            **opts
+            **self.options
         )
+        cmd.options.update(options)
         cmd.base = self.base
-        cmd.env = self.environ.copy()
+        cmd.env = self.env.copy()
         cmd.cwd = self.cwd
         return cmd
 
