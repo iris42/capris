@@ -18,11 +18,11 @@ class Command(Runnable):
             yield item
 
         yield self.command
-        for item in self.arguments:
-            yield escape(item)
-
         for item in optionify(self.options):
             yield item
+
+        for item in self.arguments:
+            yield escape(item)
 
     @property
     def commands(self):
