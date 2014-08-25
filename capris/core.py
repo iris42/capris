@@ -3,6 +3,17 @@ from collections import deque
 
 
 class Response(object):
+    """
+    Creates a response object with the given
+    process *proc*, *pid*, *status*, *stdout*
+    value, and *stderr* value.
+
+    :param command: The command that was ran.
+    :param proc: The process object.
+    :param pid: The PID of the process.
+    :param stdout: The stdout value.
+    :param stderr: The stderr value.
+    """
     def __init__(self, command, proc, pid, status, stdout, stderr):
         self.command = command
         self.proc = proc
@@ -18,10 +29,27 @@ class Response(object):
         return '<Response [%s]>' % (self.command[0])
 
     def ok(self, allowed=(0,)):
+        """
+        Returns a boolean dictating if the return
+        value of the command was *allowed*.
+
+        :param allowed: defaults to `(0,)`, an
+            iterable of accepted status codes.
+        """
         return self.status in allowed
 
 
 class Process(object):
+    """
+    Create a process objec with the given
+    *args*, *cwd*, *env*, and *data*.
+
+    :param args: The arguments to run.
+    :param cwd: Which directory to run the
+        command in.
+    :param env: The environment.
+    :param data: The data to pipe.
+    """
     def __init__(self, args, cwd, env, data):
         self._subprocess = None
         self.args = args
@@ -36,10 +64,20 @@ class Process(object):
         return '<Process [%s]>' % (' '.join(self.args))
 
     def pipe(self, data):
+        """
+        Set the internal piped data to *data*.
+
+        :param data: The data to pipe.
+        """
         self.data = data
 
     @property
     def subprocess(self):
+        """
+        A cached property that creates a
+        ``subprocess.Popen`` object once and
+        caches it.
+        """
         if self._subprocess:
             return self._subprocess
         self._subprocess = Popen(
@@ -54,6 +92,10 @@ class Process(object):
         return self._subprocess
 
     def run(self):
+        """
+        Run the internal ``subprocess`` and
+        return a response.
+        """
         proc = self.subprocess
         stdout, stderr = proc.communicate(self.data)
         return Response(
@@ -67,6 +109,16 @@ class Process(object):
 
 
 def run(commands, cwd=None, env=None, data=None):
+    """
+    Run multiple piped *commands* optionally in *cwd*,
+    with environment *env*, and with *data* piped
+    in.
+
+    :param cwd: Which directory to run the commands.
+    :param env: The environment for each command.
+    :param data: The data to pipe in to the first
+        command.
+    """
     history = deque()
     previous_stdin = PIPE
 
