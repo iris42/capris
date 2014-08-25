@@ -35,6 +35,9 @@ class Process(object):
     def __repr__(self):
         return '<Process [%s]>' % (' '.join(self.args))
 
+    def pipe(self, data):
+        self.data = data
+
     @property
     def subprocess(self):
         if self._subprocess:
@@ -73,7 +76,7 @@ def run(commands, cwd=None, env=None, data=None):
         history.appendleft(process)
         previous_stdin = process.subprocess.stdin
 
-    history[0].data = data
+    history[0].pipe(data)
     responses = [proc.run() for proc in history]
 
     r = responses.pop()
