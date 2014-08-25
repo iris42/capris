@@ -7,7 +7,7 @@ class Pipe(Runnable):
         self.commands = commands
 
     def append(self, thing):
-        self.commands = self.commands + (thing,)
+        self.commands += (thing,)
         return self
 
     def __iter__(self):
@@ -18,7 +18,8 @@ class Pipe(Runnable):
                 continue
             yield tuple(runnable)
 
-    __iadd__ = append
+    def __iadd__(self, other):
+        self.commands += other.commands
 
     def run(self, **kwargs):
         return run(tuple(self), **kwargs)
