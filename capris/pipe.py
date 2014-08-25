@@ -31,7 +31,7 @@ class Pipe(Runnable):
             yield tuple(runnable)
 
     def __iadd__(self, other):
-        self.commands += other.commands
+        self.commands.extend(other.commands)
 
     def run(self, **kwargs):
         """
