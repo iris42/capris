@@ -30,9 +30,7 @@ class Command(Runnable):
 
     @property
     def environ(self):
-        env = {}
-        if self.base:
-            env = self.base.environ
+        env = self.base.environ if self.base else {}
         env.update(self.env)
         return env
 
@@ -43,8 +41,8 @@ class Command(Runnable):
             **self.options
         )
         cmd.options.update(options)
+        cmd.env.update(self.env)
         cmd.base = self.base
-        cmd.env = self.env.copy()
         cmd.cwd = self.cwd
         return cmd
 
