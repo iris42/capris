@@ -1,4 +1,5 @@
 from subprocess import Popen, PIPE
+from collections import deque
 
 
 class Response(object):
@@ -63,19 +64,18 @@ class Process(object):
 
 
 def run(commands, cwd=None, env=None, data=None):
-    history = []
+    history = deque()
     previous_stdin = PIPE
 
     for item in reversed(commands):
         process = Process(args=item, cwd=cwd, env=env, data=None)
         process.stdout = previous_stdin
-        history.append(process)
+        history.appendleft(process)
         previous_stdin = process.subprocess.stdin
 
-    history.reverse()
     history[0].data = data
-
     responses = [proc.run() for proc in history]
+
     r = responses.pop()
     r.history = responses
     return r
