@@ -1,6 +1,14 @@
+class NullStream(object):
+    def read(self, data):
+        return None
+
+    def write(self, data):
+        return None
+
+
 class IOStream(object):
-    input = None
-    output = None
+    input = NullStream()
+    output = NullStream()
 
     def __init__(self, runnable):
         self.runnable = runnable
@@ -17,10 +25,9 @@ class IOStream(object):
         return self
 
     def run(self, **kwargs):
-        if 'data' not in kwargs and self.input is not None:
+        if 'data' not in kwargs:
             kwargs['data'] = self.input.read()
 
         response = self.runnable.run(**kwargs)
-        if self.output is not None:
-            self.output.write(response.stdout)
+        self.output.write(response.stdout)
         return response
