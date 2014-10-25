@@ -1,3 +1,1 @@
-from capris.command import Command
-
-__version__ = '0.1.0'
+from capris.core import run

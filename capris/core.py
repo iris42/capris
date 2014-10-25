@@ -80,7 +80,7 @@ class Process(object):
         """
         if self._subprocess:
             return self._subprocess
-        self._subprocess = Popen(
+        proc = Popen(
             args=self.args,
             stdin=self.stdin,
             stdout=self.stdout,
@@ -89,7 +89,8 @@ class Process(object):
             cwd=self.cwd,
             env=self.env,
         )
-        return self._subprocess
+        self._subprocess = proc
+        return proc
 
     def run(self):
         """
@@ -119,15 +120,16 @@ def run(commands, cwd=None, env=None, data=None):
     :param data: The data to pipe in to the first
         command.
     """
-    history = deque()
-    previous_stdin = PIPE
+    history = []
+    stdin = PIPE
 
     for item in reversed(commands):
-        process = Process(args=item, cwd=cwd, env=env, data=None)
-        process.stdout = previous_stdin
-        history.appendleft(process)
-        previous_stdin = process.subprocess.stdin
+        proc = Process(args=item, cwd=cwd, env=env, data=None)
+        proc.stdout = stdin
+        history.append(proc)
+        stdin = proc.subprocess.stdin
 
+    history.reverse()
     history[0].pipe(data)
     responses = [proc.run() for proc in history]
 
